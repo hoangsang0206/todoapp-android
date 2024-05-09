@@ -2,6 +2,7 @@ package com.example.todoapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class RegisterActivity extends AppCompatActivity {
+    Toolbar toolbar;
     TextView toLogin;
     EditText txtEmail, txtPassword, txtConfirmPassword;
     Button btnRegister;
@@ -25,6 +27,12 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+
+        toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitleTextAppearance(this, R.style.ToolbarTitleTextAppearance);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.bx_arrow_back);
 
         toLogin = findViewById(R.id.toLogin);
         txtEmail = findViewById(R.id.register_email);
@@ -52,6 +60,11 @@ public class RegisterActivity extends AppCompatActivity {
         String email = txtEmail.getText().toString();
         String password = txtPassword.getText().toString();
         String confirmPassword = txtConfirmPassword.getText().toString();
+
+        if(email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            Toast.makeText(RegisterActivity.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         if(!password.equals(confirmPassword)) {
             Toast.makeText(RegisterActivity.this, "Xác nhận mật khẩu không đúng", Toast.LENGTH_SHORT).show();

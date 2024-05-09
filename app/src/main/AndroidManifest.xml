@@ -13,11 +13,18 @@
         android:theme="@style/Theme.TodoApp"
         tools:targetApi="31">
         <activity
-            android:name=".RegisterActivity"
+            android:name=".LoginOrRegisterActivity"
             android:exported="false" />
         <activity
+            android:name=".RegisterActivity"
+            android:exported="false"
+            android:label="Đăng ký"
+            android:parentActivityName=".LoginOrRegisterActivity" />
+        <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:label="Đăng nhập"
+            android:parentActivityName=".LoginOrRegisterActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
