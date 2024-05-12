@@ -2,4 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="categoryBtn">#e0eefd</color>
+    <color name="categoryBtnActive">#7dabf5</color>
+
 </resources>

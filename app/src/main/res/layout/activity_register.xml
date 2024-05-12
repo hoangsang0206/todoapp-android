@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Email"
                         android:inputType="text"
-                        android:drawableLeft="@drawable/bx_user"
+                        android:drawableLeft="@drawable/icon_bx_user"
                         android:drawablePadding="15dp"
                         style="@style/EditText"/>
 
@@ -90,7 +90,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Mật khẩu"
                         android:inputType="textPassword"
-                        android:drawableLeft="@drawable/bx_lock_alt"
+                        android:drawableLeft="@drawable/icon_bx_lock_alt"
                         android:drawablePadding="15dp"
                         style="@style/EditText"/>
 
@@ -117,7 +117,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Nhập lại mật khẩu"
                         android:inputType="textPassword"
-                        android:drawableLeft="@drawable/bx_lock_alt"
+                        android:drawableLeft="@drawable/icon_bx_lock_alt"
                         android:drawablePadding="15dp"
                         style="@style/EditText"/>
 

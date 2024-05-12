@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/drawer_layout"
     android:theme="@style/Theme.MaterialComponents"
     tools:context=".MainActivity">
 
@@ -12,6 +13,7 @@
         android:layout_height="match_parent">
 
         <FrameLayout
+            android:id="@+id/frame_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#8294f3" />
@@ -21,8 +23,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:backgroundTint="#fff"
-            app:fabCradleMargin="7dp"
+            android:backgroundTint="@color/white"
+            app:fabCradleMargin="8dp"
             app:fabCradleRoundedCornerRadius="50dp">
 
             <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -30,23 +32,24 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:menu="@menu/bottom_nav"
-                app:itemIconTint="#000"
-                app:itemTextColor="#000"
+                app:itemIconTint="@color/black"
+                app:itemTextColor="@color/black"
                 android:background="@android:color/transparent"
                 app:labelVisibilityMode="labeled"
-                android:layout_marginEnd="10dp"
-
-                />
+                android:layout_marginEnd="18dp" />
 
         </com.google.android.material.bottomappbar.BottomAppBar>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddFloating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="#fff"
-            android:src="@drawable/bx_user"
+            android:backgroundTint="#5f27e7"
+            app:tint="@color/white"
+            android:src="@drawable/icon_add_outline"
+            app:maxImageSize="30dp"
             app:layout_anchor="@id/bottom_appbar"
-            android:contentDescription="TODO" />
+            android:contentDescription="@string/todo" />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -54,7 +57,8 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="left"
+        android:layout_gravity="start"
+        android:backgroundTint="@color/white"
         app:itemIconTint="#e30019"
         app:menu="@menu/nav_menu"
         tools:layout_editor_absoluteY="8dp" />

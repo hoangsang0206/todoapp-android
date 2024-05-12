@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_home"
-        android:icon="@drawable/reader_outline"
-        android:title="Todo" />
+    <item android:id="@+id/menu_nav"
+        android:icon="@drawable/icon_menu_outline"
+        android:title="@string/menu" />
 
-    <item android:id="@+id/menu_dashboard"
-        android:icon="@drawable/reader_outline"
-        android:title="Calendar" />
+    <item android:id="@+id/menu_todo"
+        android:icon="@drawable/icon_reader_outline"
+        android:title="@string/todo" />
 
     <item
         android:id="@+id/fab"
         android:title=""
         android:enabled="false"/>
 
-    <item android:id="@+id/menu_account"
-        android:icon="@drawable/reader_outline"
-        android:title="Account" />
+    <item android:id="@+id/menu_calendar"
+        android:icon="@drawable/icon_calendar_number_outline"
+        android:title="@string/calendar" />
 
-    <item android:id="@+id/menu_2"
-        android:icon="@drawable/reader_outline"
-        android:title="Setting" />
+    <item android:id="@+id/menu_account"
+        android:icon="@drawable/icon_user_outline"
+        android:title="@string/account"/>
 </menu>

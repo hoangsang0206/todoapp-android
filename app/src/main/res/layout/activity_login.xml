@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Email"
                         android:inputType="textEmailAddress"
-                        android:drawableStart="@drawable/bx_user"
+                        android:drawableStart="@drawable/icon_bx_user"
                         android:drawablePadding="15dp"
                         style="@style/EditText"/>
 
@@ -88,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Mật khẩu"
                         android:inputType="textPassword"
-                        android:drawableStart="@drawable/bx_lock_alt"
+                        android:drawableStart="@drawable/icon_bx_lock_alt"
                         android:drawablePadding="15dp"
                         style="@style/EditText"/>
 
