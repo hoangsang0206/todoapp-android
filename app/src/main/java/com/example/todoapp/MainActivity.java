@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -20,37 +21,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-
-    EditText txt;
-    Button btnSend, btnLogout;
-    TextView txtView;
-
+    BottomNavigationView bottomNav;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnSend = findViewById(R.id.btnSend);
-        btnLogout = findViewById(R.id.btnLogout);
-        txt = findViewById(R.id.txtTest);
-        txtView = findViewById(R.id.txtView);
-
-        getData();
-
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = txt.getText().toString();
-                pushData(str);
-            }
-        });
-
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                logout();
-            }
-        });
+        bottomNav = findViewById(R.id.bottom_nav);
+        bottomNav.setBackground(null);
     }
 
     private void pushData(String str) {
@@ -68,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String value = snapshot.getValue(String.class);
-                txtView.setText(value);
+//                txtView.setText(value);
             }
 
             @Override

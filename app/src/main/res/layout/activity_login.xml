@@ -52,6 +52,7 @@
                         android:text="Email"
                         android:textStyle="bold"
                         android:textSize="18sp"
+                        android:textColor="#000"
                         android:layout_marginBottom="5dp"/>
 
                     <EditText
@@ -59,8 +60,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email"
-                        android:inputType="text"
-                        android:drawableLeft="@drawable/bx_user"
+                        android:inputType="textEmailAddress"
+                        android:drawableStart="@drawable/bx_user"
                         android:drawablePadding="15dp"
                         style="@style/EditText"/>
 
@@ -78,6 +79,7 @@
                         android:text="Mật khẩu"
                         android:textStyle="bold"
                         android:textSize="18sp"
+                        android:textColor="#000"
                         android:layout_marginBottom="5dp"/>
 
                     <EditText
@@ -86,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:hint="Mật khẩu"
                         android:inputType="textPassword"
-                        android:drawableLeft="@drawable/bx_lock_alt"
+                        android:drawableStart="@drawable/bx_lock_alt"
                         android:drawablePadding="15dp"
                         style="@style/EditText"/>
 
@@ -113,7 +115,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Chưa có tài khoản?"
-                    android:textSize="16sp"/>
+                    android:textSize="16sp"
+                    android:textColor="#000"/>
 
                 <TextView
                     android:id="@+id/toRegister"
