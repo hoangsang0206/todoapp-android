@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TodoApp</string>
+    <string name="app_name">TodoList</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="calendar">Calendar</string>
@@ -8,4 +8,7 @@
     <string name="setting">Setting</string>
     <string name="menu">Menu</string>
     <string name="username">Username</string>
+    <string name="or_login_with">Hoặc đăng nhập bằng</string>
+    <string name="them_cong_viec">Thêm công việc</string>
+    <string name="ten_cong_viec">Tên công việc</string>
 </resources>

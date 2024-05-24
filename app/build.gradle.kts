@@ -30,6 +30,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -49,4 +53,7 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0") //Load image from url
     implementation("de.hdodenhof:circleimageview:3.1.0") //Circle image view
+    implementation("com.github.Dimezis:BlurView:version-2.0.3")
+
+    implementation("com.github.chthai64:SwipeRevealLayout:1.4.0")
 }

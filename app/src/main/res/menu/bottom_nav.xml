@@ -9,11 +9,6 @@
         android:icon="@drawable/icon_reader_outline"
         android:title="@string/todo" />
 
-    <item
-        android:id="@+id/fab"
-        android:title=""
-        android:enabled="false"/>
-
     <item android:id="@+id/menu_calendar"
         android:icon="@drawable/icon_calendar_number_outline"
         android:title="@string/calendar" />
@@ -21,4 +16,8 @@
     <item android:id="@+id/menu_account"
         android:icon="@drawable/icon_user_outline"
         android:title="@string/account"/>
+
+<!--    <item android:id="@+id/menu_setting"-->
+<!--        android:icon="@drawable/icon_settings_outline"-->
+<!--        android:title="@string/setting"/>-->
 </menu>

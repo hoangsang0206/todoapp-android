@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:background="@android:color/transparent">
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:blurOverlayColor="@color/overlayColor">
+
+        <LinearLayout
+            android:id="@+id/blurViewContent"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_create_todo_popup"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/them_cong_viec"
+                style="@style/PopupHeader"/>
+
+            <EditText
+                android:id="@+id/txtTodo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/EditTextNoBorder"
+                android:layout_marginTop="10dp"
+                android:padding="20dp"
+                android:textSize="17sp"
+                android:hint="@string/ten_cong_viec"
+                android:inputType="text" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp">
+
+                <Spinner
+                    android:id="@+id/category_spinner"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:background="@drawable/spinner_bg"
+                    android:layout_marginTop="6dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="0dp" />
+
+                <ImageButton
+                    android:id="@+id/btn_add_category"
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:src="@drawable/icon_add_outline_black"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintLeft_toRightOf="@+id/category_spinner"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:contentDescription="@string/app_name" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </eightbitlab.com.blurview.BlurView>
+
+</LinearLayout>

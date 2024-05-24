@@ -2,23 +2,32 @@ package com.example.todoapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.Gravity;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.animation.AnimationUtils;
+import android.widget.PopupWindow;
 
-import com.example.todoapp.fragment.TodoFragment;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.example.todoapp.adapters.SpinnerAdapter;
+import com.example.todoapp.databinding.ActivityMainBinding;
+import com.example.todoapp.databinding.CreateCategoryPopupBinding;
+import com.example.todoapp.databinding.CreateTodoPopupBinding;
+import com.example.todoapp.fragments.AccountFragment;
+import com.example.todoapp.fragments.CalendarFragment;
+import com.example.todoapp.fragments.TodoFragment;
+import com.example.todoapp.models.Category;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -27,63 +36,132 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import eightbitlab.com.blurview.RenderScriptBlur;
+
 public class MainActivity extends AppCompatActivity {
-    private DrawerLayout drawerLayout;
-    private NavigationView navView;
-    private BottomNavigationView bottomNav;
-    private FloatingActionButton btnAddFloating;
+    ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        initElements();
-        placeFragment(new TodoFragment());
-        showUserInfomation();
-
-        bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
+        binding.bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
 
                 if (id == R.id.menu_nav) {
-                    drawerLayout.openDrawer(GravityCompat.START);
+                    binding.drawerLayout.openDrawer(GravityCompat.START);
                     return true;
                 } else if(id == R.id.menu_todo) {
-                    if(isCurrentFragment(TodoFragment.class)) {
-                        Toast.makeText(MainActivity.this, "Todo is current fragment", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(MainActivity.this, "Todo isn't current fragment", Toast.LENGTH_SHORT).show();
-                    }
+                    placeFragment(new TodoFragment());
                 } else if(id == R.id.menu_calendar) {
-
+                    placeFragment(new CalendarFragment());
                 } else if(id == R.id.menu_account) {
-                    logout();
+                    placeFragment(new AccountFragment());
                 }
 
                 return false;
             }
         });
-    }
 
-    private void initElements() {
-        bottomNav = findViewById(R.id.bottom_nav);
-        bottomNav.setBackground(null);
-        drawerLayout = findViewById(R.id.drawer_layout);
-        navView = findViewById(R.id.navigation);
-        btnAddFloating = findViewById(R.id.btnAddFloating);
+        binding.btnAddFloating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCreateTodoPopup();
+            }
+        });
     }
 
     private void placeFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.frame_layout, fragment);
+        transaction.replace(binding.frameLayout.getId(), fragment);
+        transaction.addToBackStack(null);
         transaction.commit();
     }
 
-    private boolean isCurrentFragment(Class<? extends Fragment> fragmentClass) {
-        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.frame_layout);
-        return currentFragment != null && fragmentClass.isInstance(currentFragment);
+    private void showCreateTodoPopup() {
+        CreateTodoPopupBinding createTodoBinding = CreateTodoPopupBinding.inflate(getLayoutInflater());
+        PopupWindow popupWindow = new PopupWindow(createTodoBinding.getRoot(),
+                ConstraintLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+
+        float radius = 1f;
+        View decorView = getWindow().getDecorView();
+        ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
+        Drawable windowBackground = decorView.getBackground();
+        createTodoBinding.blurView.setupWith(rootView, new RenderScriptBlur(createTodoBinding.getRoot().getContext()))
+                        .setFrameClearDrawable(windowBackground)
+                        .setBlurRadius(radius)
+                        .setBlurAutoUpdate(true);
+
+        popupWindow.showAtLocation(binding.getRoot(), Gravity.CENTER, 0, 0);
+        popupWindow.getContentView().startAnimation(AnimationUtils.loadAnimation(binding.getRoot().getContext(), R.anim.fade_in));
+        initCreateTodoPopup(createTodoBinding, popupWindow);
+    }
+
+    private void initCreateTodoPopup(CreateTodoPopupBinding binding, PopupWindow popup) {
+        binding.blurView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popup.dismiss();
+            }
+        });
+        binding.blurViewContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {}
+        });
+        binding.categorySpinner.setAdapter(new SpinnerAdapter(MainActivity.this,
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, getCategories()));
+        binding.btnAddCategory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showCreateCategoryPopup();
+            }
+        });
+    }
+
+    private List<Category> getCategories() {
+        List<Category> categories = new ArrayList<>();
+        categories.add(new Category("1", "Category 1 1111111111111111111111111111111111111111"));
+        categories.add(new Category("2", "Category 2"));
+        categories.add(new Category("3", "Category 3"));
+        categories.add(new Category("4", "Category 4"));
+        return categories;
+    }
+
+    private void showCreateCategoryPopup() {
+        CreateCategoryPopupBinding createCategoryBinding = CreateCategoryPopupBinding.inflate(getLayoutInflater());
+        PopupWindow popupWindow = new PopupWindow(createCategoryBinding.getRoot(),
+                ConstraintLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+
+        float radius = 1f;
+        View decorView = getWindow().getDecorView();
+        ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
+        Drawable windowBackground = decorView.getBackground();
+        createCategoryBinding.blurView.setupWith(rootView, new RenderScriptBlur(createCategoryBinding.getRoot().getContext()))
+                .setFrameClearDrawable(windowBackground)
+                .setBlurRadius(radius)
+                .setBlurAutoUpdate(true);
+
+        popupWindow.getContentView().startAnimation(AnimationUtils.loadAnimation(binding.getRoot().getContext(), R.anim.fade_in));
+        popupWindow.showAtLocation(binding.getRoot(), Gravity.CENTER, 0, 0);
+        createCategoryBinding.blurView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+
+        createCategoryBinding.blurViewContent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {}
+        });
     }
 
     private void pushData(String str) {
@@ -122,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         Uri photoUrl = user.getPhotoUrl();
 
         if(name != null && !name.isEmpty()) {
-            bottomNav.getMenu().findItem(R.id.menu_account).setTitle(name);
+            binding.bottomNav.getMenu().findItem(R.id.menu_account).setTitle(name);
         }
     }
 
