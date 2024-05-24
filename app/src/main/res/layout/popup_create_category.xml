@@ -20,7 +20,14 @@
             android:layout_height="200dp"
             android:layout_gravity="center"
             android:background="@drawable/bg_create_category_popup"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/them_danh_muc"
+                style="@style/PopupHeader"/>
 
 
         </LinearLayout>

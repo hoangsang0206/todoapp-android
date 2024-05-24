@@ -75,7 +75,7 @@ public class TodoFragment extends Fragment {
 
     private ArrayList<Todo> loadTodoList() {
         ArrayList<Todo> usrTodoList = new ArrayList<>();
-        usrTodoList.add(new Todo("1", "Todo 1", "", LocalDateTime.now(), false, null));
+        usrTodoList.add(new Todo("1", "Todo 1111111111111111111111111111111111111111111111111111111111111", "", LocalDateTime.now(), false, null));
         usrTodoList.add(new Todo("2", "Todo 2", "", LocalDateTime.now(), false, null));
         usrTodoList.add(new Todo("3", "Todo 3", "", LocalDateTime.now(), false, null));
         usrTodoList.add(new Todo("4", "Todo 4", "", LocalDateTime.now(), false, null));

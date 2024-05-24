@@ -1,18 +1,16 @@
 package com.example.todoapp.adapters;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.todoapp.databinding.ListItemBinding;
 import com.example.todoapp.models.Todo;
+import com.example.todoapp.utils.ParseLocalDateTime;
 
 import java.util.ArrayList;
 
@@ -40,7 +38,8 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
         viewBinderHelper.bind(holder.binding.swiperRevealLayout, todo.getId());
         holder.binding.tvTodo.setText(todo.getTitle());
-        holder.binding.layoutDelete.setOnClickListener(new View.OnClickListener() {
+        holder.binding.tvTime.setText(ParseLocalDateTime.toString(todo.getDateToComplete(), "dd/MM/yyyy HH:mm:a"));
+        holder.binding.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 todoList.remove(holder.getAdapterPosition());

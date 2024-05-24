@@ -21,8 +21,8 @@ import android.widget.PopupWindow;
 
 import com.example.todoapp.adapters.SpinnerAdapter;
 import com.example.todoapp.databinding.ActivityMainBinding;
-import com.example.todoapp.databinding.CreateCategoryPopupBinding;
-import com.example.todoapp.databinding.CreateTodoPopupBinding;
+import com.example.todoapp.databinding.PopupCreateCategoryBinding;
+import com.example.todoapp.databinding.PopupCreateTodoBinding;
 import com.example.todoapp.fragments.AccountFragment;
 import com.example.todoapp.fragments.CalendarFragment;
 import com.example.todoapp.fragments.TodoFragment;
@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showCreateTodoPopup() {
-        CreateTodoPopupBinding createTodoBinding = CreateTodoPopupBinding.inflate(getLayoutInflater());
+        PopupCreateTodoBinding createTodoBinding = PopupCreateTodoBinding.inflate(getLayoutInflater());
         PopupWindow popupWindow = new PopupWindow(createTodoBinding.getRoot(),
                 ConstraintLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
 
@@ -105,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         initCreateTodoPopup(createTodoBinding, popupWindow);
     }
 
-    private void initCreateTodoPopup(CreateTodoPopupBinding binding, PopupWindow popup) {
+    private void initCreateTodoPopup(PopupCreateTodoBinding binding, PopupWindow popup) {
         binding.blurView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showCreateCategoryPopup() {
-        CreateCategoryPopupBinding createCategoryBinding = CreateCategoryPopupBinding.inflate(getLayoutInflater());
+        PopupCreateCategoryBinding createCategoryBinding = PopupCreateCategoryBinding.inflate(getLayoutInflater());
         PopupWindow popupWindow = new PopupWindow(createCategoryBinding.getRoot(),
                 ConstraintLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
 
