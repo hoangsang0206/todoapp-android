@@ -7,6 +7,10 @@ import java.time.format.DateTimeFormatter;
 
 public class ParseDateTime {
     public static String toString(LocalDateTime localDateTime, String pattern) {
+        if(localDateTime == null) {
+            return null;
+        }
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return formatter.format(localDateTime);
     }

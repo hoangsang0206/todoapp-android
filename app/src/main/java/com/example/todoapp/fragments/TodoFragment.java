@@ -85,12 +85,14 @@ public class TodoFragment extends Fragment {
     }
 
     private void getCategories() {
-        DatabaseReference ref = db.getReference("users/" + user.getUid() + "/categories");
         binding.horizonCategoryRcview.setVisibility(View.INVISIBLE);
+        binding.categoriesShimmer.setVisibility(View.VISIBLE);
         binding.categoriesShimmer.startShimmer();
+        DatabaseReference ref = db.getReference("users/" + user.getUid() + "/categories");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 if(snapshot.exists()) {
                     categories = new ArrayList<>();
                     categories.add(new Category("all", "Tất cả"));
@@ -117,9 +119,11 @@ public class TodoFragment extends Fragment {
     }
 
     private void getTodoList() {
-        DatabaseReference ref = db.getReference("users/" + user.getUid() + "/todoList");
-        binding.todoShimmer.startShimmer();
         binding.todoRecyclerView.setVisibility(View.INVISIBLE);
+        binding.todoShimmer.setVisibility(View.VISIBLE);
+        binding.todoShimmer.startShimmer();
+
+        DatabaseReference ref = db.getReference("users/" + user.getUid() + "/todoList");
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -130,7 +134,7 @@ public class TodoFragment extends Fragment {
                         todoList.add(todo);
                     }
 
-                    binding.todoRecyclerView.setAdapter(new TodoRecyclerViewAdapter(todoList));
+                    binding.todoRecyclerView.setAdapter(new TodoRecyclerViewAdapter(getContext(), todoList));
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

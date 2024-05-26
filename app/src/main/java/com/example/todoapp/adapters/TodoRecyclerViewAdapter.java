@@ -1,22 +1,28 @@
 package com.example.todoapp.adapters;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.chauthai.swipereveallayout.ViewBinderHelper;
 import com.example.todoapp.R;
+import com.example.todoapp.UpdateTodoActivity;
 import com.example.todoapp.databinding.ListItemBinding;
 import com.example.todoapp.models.Todo;
 import com.example.todoapp.utils.ParseDateTime;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,9 +30,11 @@ import java.util.ArrayList;
 
 public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerViewAdapter.TodoViewHolder> {
     private ArrayList<Todo> todoList;
+    private Context context;
     private ViewBinderHelper viewBinderHelper = new ViewBinderHelper();
 
-    public TodoRecyclerViewAdapter(ArrayList<Todo> todoList) {
+    public TodoRecyclerViewAdapter(Context context, ArrayList<Todo> todoList) {
+        this.context = context;
         this.todoList = todoList;
     }
 
@@ -59,14 +67,19 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         holder.binding.btnDelete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                todoList.remove(holder.getAdapterPosition());
-                notifyItemRemoved(holder.getAdapterPosition());
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/todoList/" + todo.getId());
+                ref.removeValue();
             }
         });
         holder.binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, UpdateTodoActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("Todo", todo);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         });
         holder.binding.ckboxComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

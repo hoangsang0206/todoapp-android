@@ -1,54 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.TodoFragment">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+<layout>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#f9ffff">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".fragments.TodoFragment">
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/categories_shimmer"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent">
-            <include layout="@layout/horizon_category_placeholder" />
-        </com.facebook.shimmer.ShimmerFrameLayout>
+            android:layout_height="match_parent"
+            android:background="#f9ffff">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/horizon_category_rcview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginTop="12dp"
-            android:paddingHorizontal="15dp"/>
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/categories_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="15dp">
+                <include layout="@layout/horizon_category_placeholder" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/todo_shimmer"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/horizon_category_rcview"
-            app:layout_constraintBottom_toBottomOf="parent">
-            <include layout="@layout/list_item_placeholder" />
-        </com.facebook.shimmer.ShimmerFrameLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/horizon_category_rcview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="12dp"
+                android:paddingHorizontal="15dp"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/todo_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintTop_toBottomOf="@+id/horizon_category_rcview"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="20dp"
-            android:paddingHorizontal="15dp">
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/todo_shimmer"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/categories_shimmer"
+                android:layout_marginTop="24dp"
+                android:paddingHorizontal="15dp">
+                <include layout="@layout/list_item_placeholder" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
-        </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/todo_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@+id/horizon_category_rcview"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginTop="20dp"
+                android:paddingHorizontal="15dp">
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.recyclerview.widget.RecyclerView>
 
-</FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
+</layout>

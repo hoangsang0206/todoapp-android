@@ -11,8 +11,8 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +23,6 @@ import android.widget.DatePicker;
 import android.widget.PopupWindow;
 import android.widget.TimePicker;
 
-import com.example.todoapp.adapters.CategoryRecyclerViewAdapter;
 import com.example.todoapp.adapters.SpinnerAdapter;
 import com.example.todoapp.databinding.ActivityMainBinding;
 import com.example.todoapp.databinding.PopupCreateCategoryBinding;
@@ -44,14 +43,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import org.checkerframework.checker.units.qual.C;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.List;
 
 import eightbitlab.com.blurview.RenderScriptBlur;
 
@@ -64,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        placeFragment(new TodoFragment());
 
         binding.bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -145,17 +141,17 @@ public class MainActivity extends AppCompatActivity {
         DatePickerDialog d_dialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateToComplete[0] = LocalDate.of(year, month, dayOfMonth);
+                dateToComplete[0] = LocalDate.of(year, month + 1, dayOfMonth);
             }
-        }, LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue() - 1, LocalDateTime.now().getDayOfMonth());
+        }, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
         TimePickerDialog t_dialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 if(dateToComplete[0] != null) {
                     dateTimeToComplete[0] = LocalDateTime.of(dateToComplete[0].getYear(),
-                            dateToComplete[0].getMonthValue() - 1, dateToComplete[0].getDayOfMonth(), hourOfDay, minute);
+                            dateToComplete[0].getMonthValue(), dateToComplete[0].getDayOfMonth(), hourOfDay, minute);
                 } else {
-                    dateTimeToComplete[0] = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue() - 1,
+                    dateTimeToComplete[0] = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
                             LocalDateTime.now().getDayOfMonth(), hourOfDay, minute);
                 }
             }
@@ -178,10 +174,11 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String name = binding.txtTodo.getText().toString();
                 if(name == null || name.isEmpty()) {
-                    binding.txtTodo.setError("");
+                    binding.txtTodo.setError("Nhập tên công việc");
                 } else {
                     Category category = (Category) binding.categorySpinner.getSelectedItem();
                     createTodo(name, category, dateTimeToComplete[0]);
+                    popup.dismiss();
                 }
             }
         });
