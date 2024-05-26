@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.todoapp.databinding.ActivityUpdateTodoBinding;
 import com.example.todoapp.models.Todo;
-import com.example.todoapp.models.TodoViewModel;
 
 public class UpdateTodoActivity extends AppCompatActivity {
     ActivityUpdateTodoBinding binding;
@@ -26,8 +24,5 @@ public class UpdateTodoActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Todo todo = (Todo) intent.getSerializableExtra("Todo");
-
-        TodoViewModel todoViewModel = new TodoViewModel(todo.getTitle(), todo.getDescription(), todo.getDateToComplete());
-        binding.setTodo(todoViewModel);
     }
 }

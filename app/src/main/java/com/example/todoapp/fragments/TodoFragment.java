@@ -101,7 +101,7 @@ public class TodoFragment extends Fragment {
                         categories.add(category);
                     }
 
-                    binding.horizonCategoryRcview.setAdapter(new CategoryRecyclerViewAdapter(categories));
+                    binding.horizonCategoryRcview.setAdapter(new CategoryRecyclerViewAdapter(binding, categories));
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {

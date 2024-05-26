@@ -1,75 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:background="@android:color/transparent">
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:gravity="bottom"
-        android:background="@android:color/transparent">
+        app:blurOverlayColor="@color/overlayColor"
+        android:padding="20dp">
 
-        <eightbitlab.com.blurview.BlurView
-            android:id="@+id/blurView"
+        <LinearLayout
+            android:id="@+id/blurViewContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:blurOverlayColor="@color/overlayColor"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_create_category_popup"
+            android:orientation="vertical"
             android:padding="20dp">
 
-            <LinearLayout
-                android:id="@+id/blurViewContent"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:layout_gravity="center"
-                android:background="@drawable/bg_create_category_popup"
-                android:orientation="vertical"
-                android:padding="20dp">
+                android:layout_height="wrap_content"
+                android:text="@string/them_danh_muc"
+                style="@style/PopupHeader"/>
 
-                <TextView
-                    android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/category_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/ten_danh_muc"
+                style="@style/EditTextNoBorder"
+                android:padding="20dp"
+                android:textSize="17sp"
+                android:inputType="text"
+                android:layout_marginTop="10dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <Button
+                    android:id="@+id/btn_cancel_create_category"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/them_danh_muc"
-                    style="@style/PopupHeader"/>
-
-                <EditText
-                    android:id="@+id/category_name"
-                    android:layout_width="match_parent"
+                    android:layout_marginEnd="10dp"
+                    android:text="@string/huy"
+                    android:background="@drawable/btn_cancel"
+                    app:backgroundTint="@null" />
+                <Button
+                    android:id="@+id/btn_create_category"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="@string/ten_danh_muc"
-                    style="@style/EditTextNoBorder"
-                    android:padding="20dp"
-                    android:textSize="17sp"
-                    android:inputType="text"
-                    android:layout_marginTop="10dp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:orientation="horizontal"
-                    android:gravity="end">
-
-                    <Button
-                        android:id="@+id/btn_cancel_create_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
-                        android:text="@string/huy"
-                        android:background="@drawable/btn_cancel"
-                        app:backgroundTint="@null" />
-                    <Button
-                        android:id="@+id/btn_create_category"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/them_moi"
-                        android:background="@drawable/btn_crate"
-                        app:backgroundTint="@null" />
-
-                </LinearLayout>
-
+                    android:text="@string/them_moi"
+                    android:background="@drawable/btn_crate"
+                    app:backgroundTint="@null" />
 
             </LinearLayout>
 
-        </eightbitlab.com.blurview.BlurView>
 
-    </LinearLayout>
-</layout>
+        </LinearLayout>
+
+    </eightbitlab.com.blurview.BlurView>
+
+</LinearLayout>

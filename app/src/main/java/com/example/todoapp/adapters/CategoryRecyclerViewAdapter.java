@@ -1,6 +1,7 @@
 package com.example.todoapp.adapters;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,17 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.todoapp.R;
+import com.example.todoapp.databinding.FragmentTodoBinding;
 import com.example.todoapp.databinding.HorizonCategoryListItemBinding;
 import com.example.todoapp.models.Category;
+import com.example.todoapp.models.Todo;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRecyclerViewAdapter.CViewHolder> {
     private ArrayList<Category> categories;
     private int clickedItem = RecyclerView.NO_POSITION;
+    private FragmentTodoBinding fragmentTodoBinding;
 
-    public CategoryRecyclerViewAdapter(ArrayList<Category> categories) {
+    public CategoryRecyclerViewAdapter(FragmentTodoBinding fragmentTodoBinding, ArrayList<Category> categories) {
         this.categories = categories;
+        this.fragmentTodoBinding = fragmentTodoBinding;
     }
 
     @NonNull
@@ -31,7 +43,8 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
 
     @Override
     public void onBindViewHolder(@NonNull CViewHolder holder, int position) {
-        holder.binding.categoryName.setText(categories.get(position).getName());
+        Category category = categories.get(position);
+        holder.binding.categoryName.setText(category.getName());
 
         if(clickedItem == position) {
             holder.binding.getRoot().setActivated(true);
@@ -45,6 +58,46 @@ public class CategoryRecyclerViewAdapter extends RecyclerView.Adapter<CategoryRe
                 notifyItemChanged(clickedItem);
                 clickedItem = holder.getAdapterPosition();
                 notifyItemChanged(clickedItem);
+
+                fragmentTodoBinding.todoRecyclerView.setVisibility(View.INVISIBLE);
+                fragmentTodoBinding.todoShimmer.setVisibility(View.VISIBLE);
+                fragmentTodoBinding.todoShimmer.startShimmer();
+
+                Query query;
+                if(!category.getId().equals("all")) {
+                    query = FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child("todoList").orderByChild("category/id").equalTo(category.getId());
+                } else {
+                    query = FirebaseDatabase.getInstance().getReference("users/" + FirebaseAuth.getInstance().getCurrentUser().getUid())
+                            .child("todoList");
+                }
+                query.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        ArrayList<Todo> todoList = new ArrayList<>();
+                        for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Todo todo = dataSnapshot.getValue(Todo.class);
+                            todoList.add(todo);
+                        }
+
+                        TodoRecyclerViewAdapter adapter = (TodoRecyclerViewAdapter) fragmentTodoBinding.todoRecyclerView.getAdapter();
+                        if(adapter != null) {
+                            adapter.setTodoList(todoList);
+                        }
+
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                fragmentTodoBinding.todoRecyclerView.setVisibility(View.VISIBLE);
+                                fragmentTodoBinding.todoShimmer.setVisibility(View.INVISIBLE);
+                                fragmentTodoBinding.todoShimmer.stopShimmer();
+                            }
+                        }, 1000);
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) { }
+                });
             }
         });
     }

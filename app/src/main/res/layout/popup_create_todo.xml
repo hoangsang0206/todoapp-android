@@ -1,120 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:background="@android:color/transparent">
+
+    <eightbitlab.com.blurview.BlurView
+        android:id="@+id/blurView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:orientation="vertical"
-        android:gravity="bottom"
-        android:background="@android:color/transparent">
+        app:blurOverlayColor="@color/overlayColor">
 
-        <eightbitlab.com.blurview.BlurView
-            android:id="@+id/blurView"
+        <LinearLayout
+            android:id="@+id/blurViewContent"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:blurOverlayColor="@color/overlayColor">
+            android:layout_height="190dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/bg_create_todo_popup"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingTop="20dp">
 
-            <LinearLayout
-                android:id="@+id/blurViewContent"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="190dp"
-                android:layout_gravity="bottom"
-                android:background="@drawable/bg_create_todo_popup"
-                android:orientation="vertical"
-                android:paddingHorizontal="20dp"
-                android:paddingTop="20dp">
+                android:layout_height="wrap_content"
+                android:text="@string/them_cong_viec"
+                style="@style/PopupHeader"/>
 
-                <TextView
-                    android:layout_width="match_parent"
+            <EditText
+                android:id="@+id/txtTodo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/EditTextNoBorder"
+                android:layout_marginTop="10dp"
+                android:padding="20dp"
+                android:textSize="17sp"
+                android:hint="@string/ten_cong_viec"
+                android:inputType="text" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <Spinner
+                    android:id="@+id/category_spinner"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/them_cong_viec"
-                    style="@style/PopupHeader"/>
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:background="@drawable/spinner_bg"
+                    android:layout_marginTop="5dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="0dp" />
 
-                <EditText
-                    android:id="@+id/txtTodo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    style="@style/EditTextNoBorder"
-                    android:layout_marginTop="10dp"
-                    android:padding="20dp"
-                    android:textSize="17sp"
-                    android:hint="@string/ten_cong_viec"
-                    android:inputType="text" />
+                <ImageButton
+                    android:id="@+id/btn_add_category"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/icon_add_outline"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintLeft_toRightOf="@+id/category_spinner"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="6dp"
+                    android:contentDescription="@string/app_name"
+                    android:backgroundTint="@color/lightBlue"/>
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp">
+                <ImageView
+                    android:id="@+id/btn_set_date"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/icon_bx_calendar"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintLeft_toRightOf="@+id/btn_add_category"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="2dp"
+                    android:contentDescription="@string/app_name"
+                    android:backgroundTint="@android:color/transparent" />
 
-                    <Spinner
-                        android:id="@+id/category_spinner"
-                        android:layout_width="140dp"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        android:background="@drawable/spinner_bg"
-                        android:layout_marginTop="5dp"
-                        android:paddingHorizontal="15dp"
-                        android:paddingVertical="0dp" />
+                <ImageView
+                    android:id="@+id/btn_set_time"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/icon_bx_time_five"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintLeft_toRightOf="@+id/btn_set_date"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
+                    android:contentDescription="@string/app_name"
+                    android:backgroundTint="@android:color/transparent" />
 
-                    <ImageButton
-                        android:id="@+id/btn_add_category"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:src="@drawable/icon_add_outline"
-                        android:scaleType="fitCenter"
-                        app:layout_constraintLeft_toRightOf="@+id/category_spinner"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="6dp"
-                        android:contentDescription="@string/app_name"
-                        android:backgroundTint="@color/lightBlue"/>
+                <ImageButton
+                    android:id="@+id/btn_create_todo"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:src="@drawable/icon_bx_check"
+                    android:scaleType="fitCenter"
+                    android:padding="8dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    android:layout_marginStart="6dp"
+                    android:contentDescription="@string/app_name"
+                    android:background="@drawable/bg_circle"
+                    android:backgroundTint="@color/lightBlue_1"/>
 
-                    <ImageView
-                        android:id="@+id/btn_set_date"
-                        android:layout_width="45dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/icon_bx_calendar"
-                        android:scaleType="fitCenter"
-                        app:layout_constraintLeft_toRightOf="@+id/btn_add_category"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginTop="2dp"
-                        android:contentDescription="@string/app_name"
-                        android:backgroundTint="@android:color/transparent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-                    <ImageView
-                        android:id="@+id/btn_set_time"
-                        android:layout_width="45dp"
-                        android:layout_height="40dp"
-                        android:src="@drawable/icon_bx_time_five"
-                        android:scaleType="fitCenter"
-                        app:layout_constraintLeft_toRightOf="@+id/btn_set_date"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:layout_marginStart="5dp"
-                        android:layout_marginTop="3dp"
-                        android:contentDescription="@string/app_name"
-                        android:backgroundTint="@android:color/transparent" />
+        </LinearLayout>
 
-                    <ImageButton
-                        android:id="@+id/btn_create_todo"
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        android:src="@drawable/icon_bx_check"
-                        android:scaleType="fitCenter"
-                        android:padding="8dp"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintRight_toRightOf="parent"
-                        android:layout_marginStart="6dp"
-                        android:contentDescription="@string/app_name"
-                        android:background="@drawable/bg_circle"
-                        android:backgroundTint="@color/lightBlue_1"/>
+    </eightbitlab.com.blurview.BlurView>
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </LinearLayout>
-
-        </eightbitlab.com.blurview.BlurView>
-
-    </LinearLayout>
-</layout>
+</LinearLayout>
