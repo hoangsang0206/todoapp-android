@@ -5,10 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -16,8 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.todoapp.models.UserObject;
+import com.example.todoapp.dialogs.LoadingDialog;
+import com.example.todoapp.models.Category;
 import com.example.todoapp.utils.EmailValidation;
+import com.example.todoapp.utils.RandomString;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -30,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
     Toolbar toolbar;
@@ -80,17 +78,34 @@ public class RegisterActivity extends AppCompatActivity {
         if(!validateData(email, password, confirmPassword)) {
             return;
         }
+        LoadingDialog dialog = new LoadingDialog(RegisterActivity.this);
+        dialog.show();
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
+                    createUserCategories();
+                    signIn(email, password);
+                } else {
+                    Toast.makeText(RegisterActivity.this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
+                }
+
+                dialog.dismiss();
+            }
+        });
+    }
+
+    private void signIn(String email, String password) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if(task.isSuccessful()) {
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-                } else {
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -125,24 +140,19 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
-    private void createUserObject() { //create object user in FirebaseDatabase
+    private void createUserCategories() { //create object user in FirebaseDatabase
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             return;
         }
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference userRef = database.getReference("users");
 
-        Map<String, UserObject> mapUserObj = new HashMap<>();
-        UserObject userObj = new UserObject(user.getUid(), new ArrayList<>(), new ArrayList<>());
-        mapUserObj.put(user.getUid(), userObj);
-
-        userRef.setValue(mapUserObj, new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                //
-            }
-        });
+        String id_1 = "c_" + RandomString.random(10);
+        database.getReference("users/" + user.getUid() + "/categories/" + id_1).setValue(new Category(id_1, "Công việc"));
+        String id_2 = "c_" + RandomString.random(10);
+        database.getReference("users/" + user.getUid() + "/categories/" + id_2).setValue(new Category(id_2, "Học tập"));
+        String id_3 = "c_" + RandomString.random(10);
+        database.getReference("users/" + user.getUid() + "/categories/" + id_3).setValue(new Category(id_3, "Giải trí"));
     }
 }

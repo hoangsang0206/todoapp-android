@@ -2,7 +2,7 @@
 <com.chauthai.swipereveallayout.SwipeRevealLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/swiper_reveal_layout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="62dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:mode="same_level"
     app:dragEdge="right"
@@ -13,7 +13,7 @@
     <!-- Secondary layout here -->
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="62dp">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/btn_edit"
@@ -32,15 +32,17 @@
             android:src="@drawable/icon_bx_trash"
             android:scaleType="centerCrop"
             android:contentDescription="@string/todo"
-            android:background="@color/red"
+            android:backgroundTint="@color/red"
+            android:background="@drawable/bg_radius_right"
             android:padding="20dp"/>
 
     </LinearLayout>
 
     <!-- Main layout here -->
     <LinearLayout
+        android:id="@+id/list_item_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingHorizontal="8dp"
@@ -51,7 +53,7 @@
             android:id="@+id/ckbox_complete"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_marginEnd="5dp"/>
+            android:layout_marginEnd="5dp" />
 
         <LinearLayout
             android:layout_width="match_parent"

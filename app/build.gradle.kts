@@ -56,4 +56,5 @@ dependencies {
     implementation("com.github.Dimezis:BlurView:version-2.0.3")
 
     implementation("com.github.chthai64:SwipeRevealLayout:1.4.0")
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
 }

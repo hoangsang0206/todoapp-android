@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.todoapp.dialogs.LoadingDialog;
 import com.example.todoapp.utils.EmailValidation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -67,7 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         if(!validateData(email, password)) {
             return;
         }
-
+        LoadingDialog dialog = new LoadingDialog(LoginActivity.this);
+        dialog.show();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -79,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(LoginActivity.this, "Sai email hoặc mật khẩu", Toast.LENGTH_SHORT).show();
                 }
+
+                dialog.dismiss();
             }
         });
     }

@@ -1,12 +1,18 @@
 package com.example.todoapp.utils;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
-public class ParseLocalDateTime {
+public class ParseDateTime {
     public static String toString(LocalDateTime localDateTime, String pattern) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         return formatter.format(localDateTime);
     }
+
+    public static LocalDateTime parseFromString(String dateStr) {
+        return LocalDateTime.now();
+    }
+
 }

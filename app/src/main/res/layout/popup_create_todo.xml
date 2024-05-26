@@ -70,22 +70,35 @@
                     android:backgroundTint="@color/lightBlue"/>
 
                 <ImageView
-                    android:id="@+id/btn_set_time"
+                    android:id="@+id/btn_set_date"
                     android:layout_width="45dp"
-                    android:layout_height="35dp"
-                    android:src="@drawable/icon_bx_time_five"
+                    android:layout_height="40dp"
+                    android:src="@drawable/icon_bx_calendar"
                     android:scaleType="fitCenter"
                     app:layout_constraintLeft_toRightOf="@+id/btn_add_category"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:layout_marginStart="15dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="2dp"
+                    android:contentDescription="@string/app_name"
+                    android:backgroundTint="@android:color/transparent" />
+
+                <ImageView
+                    android:id="@+id/btn_set_time"
+                    android:layout_width="45dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/icon_bx_time_five"
+                    android:scaleType="fitCenter"
+                    app:layout_constraintLeft_toRightOf="@+id/btn_set_date"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="3dp"
                     android:contentDescription="@string/app_name"
                     android:backgroundTint="@android:color/transparent" />
 
                 <ImageButton
                     android:id="@+id/btn_create_todo"
-                    android:layout_width="55dp"
-                    android:layout_height="55dp"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
                     android:src="@drawable/icon_bx_check"
                     android:scaleType="fitCenter"
                     android:padding="8dp"

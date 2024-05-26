@@ -1,21 +1,19 @@
 package com.example.todoapp.models;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 
 public class Todo implements Serializable {
     protected String id;
     protected String title;
     protected String description;
-    protected LocalDateTime dateToComplete;
+    protected String dateToComplete;
     protected boolean completeStatus;
     protected Category category;
 
     public Todo() {
     }
 
-    public Todo(String id, String title, String description, LocalDateTime dateToComplete, boolean completeStatus, Category category) {
+    public Todo(String id, String title, String description, String dateToComplete, boolean completeStatus, Category category) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -48,11 +46,11 @@ public class Todo implements Serializable {
         this.description = description;
     }
 
-    public LocalDateTime getDateToComplete() {
+    public String getDateToComplete() {
         return dateToComplete;
     }
 
-    public void setDateToComplete(LocalDateTime dateToComplete) {
+    public void setDateToComplete(String dateToComplete) {
         this.dateToComplete = dateToComplete;
     }
 

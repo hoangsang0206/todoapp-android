@@ -1,20 +1,21 @@
 package com.example.todoapp.models;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UserObject implements Serializable {
+public class User {
     protected String id;
     protected ArrayList<Category> categories;
     protected ArrayList<Todo> todoList;
 
-    public UserObject() {
-    }
-
-    public UserObject(String id, ArrayList<Category> categories, ArrayList<Todo> todoList) {
+    public User(String id, ArrayList<Category> categories, ArrayList<Todo> todoList) {
         this.id = id;
         this.categories = categories;
         this.todoList = todoList;
+    }
+
+    public User() {
+        this.categories = new ArrayList<>();
+        this.todoList = new ArrayList<>();
     }
 
     public String getId() {

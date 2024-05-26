@@ -1,26 +1,41 @@
 package com.example.todoapp.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.example.todoapp.R;
+import com.example.todoapp.adapters.CategoryRecyclerViewAdapter;
 import com.example.todoapp.adapters.TodoRecyclerViewAdapter;
 import com.example.todoapp.databinding.FragmentTodoBinding;
+import com.example.todoapp.models.Category;
 import com.example.todoapp.models.Todo;
+import com.example.todoapp.utils.RandomString;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class TodoFragment extends Fragment {
-    private ArrayList<Button> categoryButtons;
+    private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private final FirebaseDatabase db = FirebaseDatabase.getInstance();
+
+    private ArrayList<Category> categories;
     private ArrayList<Todo> todoList;
     private FragmentTodoBinding binding;
 
@@ -44,42 +59,92 @@ public class TodoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentTodoBinding.inflate(inflater, container, false);
-        categoryButtons = new ArrayList<>();
 
-        categoryButtons.add(binding.cate1);
-        categoryButtons.add(binding.cate2);
-        categoryButtons.add(binding.cate3);
-
-        categoryButtons.forEach(button -> {
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    categoryButtons.forEach(button1 -> {
-                        button1.setActivated(false);
-                        button1.setTextColor(Color.parseColor("#676d74"));
-                    });
-
-                    button.setActivated(true);
-                    button.setTextColor(Color.parseColor("#FFFFFF"));
-                }
-            });
-        });
-
-        todoList = loadTodoList();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(binding.getRoot().getContext());
+        LinearLayoutManager horizonLinearLayoutManager = new LinearLayoutManager(binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false);
         binding.todoRecyclerView.setLayoutManager(linearLayoutManager);
-        binding.todoRecyclerView.setAdapter(new TodoRecyclerViewAdapter(todoList));
+        binding.horizonCategoryRcview.setLayoutManager(horizonLinearLayoutManager);
+
+        getCategories();
+        getTodoList();
 
         return binding.getRoot();
     }
 
-    private ArrayList<Todo> loadTodoList() {
-        ArrayList<Todo> usrTodoList = new ArrayList<>();
-        usrTodoList.add(new Todo("1", "Todo 1111111111111111111111111111111111111111111111111111111111111", "", LocalDateTime.now(), false, null));
-        usrTodoList.add(new Todo("2", "Todo 2", "", LocalDateTime.now(), false, null));
-        usrTodoList.add(new Todo("3", "Todo 3", "", LocalDateTime.now(), false, null));
-        usrTodoList.add(new Todo("4", "Todo 4", "", LocalDateTime.now(), false, null));
+    private void createCategory(String categoryName) {
+        String cateId = "c_" + RandomString.random(10);
+        Category category = new Category(cateId, categoryName);
 
-        return usrTodoList;
+        DatabaseReference ref = db.getReference("users/" + user.getUid() + "/categories/" + cateId);
+        ref.setValue(category, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
+                //...........
+            }
+        });
     }
+
+    private void getCategories() {
+        DatabaseReference ref = db.getReference("users/" + user.getUid() + "/categories");
+        binding.horizonCategoryRcview.setVisibility(View.INVISIBLE);
+        binding.categoriesShimmer.startShimmer();
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    categories = new ArrayList<>();
+                    categories.add(new Category("all", "Tất cả"));
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Category category = dataSnapshot.getValue(Category.class);
+                        categories.add(category);
+                    }
+
+                    binding.horizonCategoryRcview.setAdapter(new CategoryRecyclerViewAdapter(categories));
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.horizonCategoryRcview.setVisibility(View.VISIBLE);
+                            binding.categoriesShimmer.stopShimmer();
+                            binding.categoriesShimmer.setVisibility(View.INVISIBLE);
+                        }
+                    }, 1000);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
+    private void getTodoList() {
+        DatabaseReference ref = db.getReference("users/" + user.getUid() + "/todoList");
+        binding.todoShimmer.startShimmer();
+        binding.todoRecyclerView.setVisibility(View.INVISIBLE);
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    todoList = new ArrayList<>();
+                    for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        Todo todo = dataSnapshot.getValue(Todo.class);
+                        todoList.add(todo);
+                    }
+
+                    binding.todoRecyclerView.setAdapter(new TodoRecyclerViewAdapter(todoList));
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.todoShimmer.stopShimmer();
+                            binding.todoShimmer.setVisibility(View.INVISIBLE);
+                            binding.todoRecyclerView.setVisibility(View.VISIBLE);
+                        }
+                    }, 1000);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+    }
+
 }

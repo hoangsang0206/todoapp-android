@@ -12,4 +12,7 @@
     <string name="them_cong_viec">Thêm công việc</string>
     <string name="ten_cong_viec">Tên công việc</string>
     <string name="them_danh_muc">Thêm danh mục</string>
+    <string name="ten_danh_muc">Tên danh mục</string>
+    <string name="huy">Hủy</string>
+    <string name="them_moi">Thêm mới</string>
 </resources>
