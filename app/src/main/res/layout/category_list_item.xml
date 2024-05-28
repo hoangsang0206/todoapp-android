@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingEnd="10dp"
+    android:background="@drawable/bg_list_item_radius"
+    android:backgroundTint="#E0F7FD"
+    android:layout_marginBottom="8dp">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/icon_document_text_outline"
+        android:scaleType="centerCrop"
+        android:padding="12dp"/>
+
+    <TextView
+        android:id="@+id/category_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/todo_count"
+        android:text="@string/category"
+        android:layout_marginLeft="10dp"
+        android:textSize="17sp"
+        android:ellipsize="end"
+        android:maxLines="1"/>
+
+    <TextView
+        android:id="@+id/todo_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/edit_category"
+        android:text="100"
+        android:textSize="17sp"
+        android:textColor="#6F6F6F"
+        android:layout_marginEnd="20dp"/>
+
+    <ImageView
+        android:id="@+id/edit_category"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        app:layout_constraintRight_toLeftOf="@+id/delete_category"
+        android:src="@drawable/icon_bxs_edit_blue"
+        android:paddingHorizontal="8dp"
+        android:paddingBottom="8dp"
+        android:paddingTop="10dp"/>
+
+    <ImageView
+        android:id="@+id/delete_category"
+        android:layout_width="40dp"
+        android:layout_height="match_parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:src="@drawable/icon_bx_trash_red"
+        android:padding="8dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,19 +7,21 @@ public class Todo implements Serializable {
     protected String title;
     protected String description;
     protected String dateToComplete;
+    protected String dateCompleted;
     protected boolean completeStatus;
-    protected Category category;
+    protected String categoryId;
 
     public Todo() {
     }
 
-    public Todo(String id, String title, String description, String dateToComplete, boolean completeStatus, Category category) {
+    public Todo(String id, String title, String description, String dateToComplete, String dateCompleted, boolean completeStatus, String categoryId) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.dateToComplete = dateToComplete;
+        this.dateCompleted = dateCompleted;
         this.completeStatus = completeStatus;
-        this.category = category;
+        this.categoryId = categoryId;
     }
 
     public String getId() {
@@ -54,6 +56,14 @@ public class Todo implements Serializable {
         this.dateToComplete = dateToComplete;
     }
 
+    public String getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(String dateCompleted) {
+        this.dateCompleted = dateCompleted;
+    }
+
     public boolean isCompleteStatus() {
         return completeStatus;
     }
@@ -62,11 +72,11 @@ public class Todo implements Serializable {
         this.completeStatus = completeStatus;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 }

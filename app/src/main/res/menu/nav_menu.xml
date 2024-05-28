@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/menu_home"
-        android:icon="@drawable/icon_reader_outline"
-        android:iconTint="#fff"
-        android:title="Todo" />
+    <group>
+        <item android:id="@+id/menu_todo"
+            android:icon="@drawable/icon_reader_outline"
+            android:title="@string/todo" />
 
-    <item android:id="@+id/menu_dashboard"
-        android:icon="@drawable/icon_reader_outline"
-        android:title="Calendar"
-        app:showAsAction="always"/>
+        <item android:id="@+id/menu_categories"
+            android:icon="@drawable/icon_grid_outline"
+            android:title="@string/category" />
 
-    <item android:id="@+id/menu_account"
-        android:icon="@drawable/icon_reader_outline"
-        android:iconTint="#fff"
-        android:title="Account" />
+        <item android:id="@+id/menu_calendar"
+            android:icon="@drawable/icon_calendar_number_outline"
+            android:title="@string/calendar" />
+    </group>
+    <group>
+        <item android:id="@+id/menu_setting"
+            android:icon="@drawable/icon_settings_outline"
+            android:title="@string/setting" />
+
+        <item android:id="@+id/menu_account"
+            android:icon="@drawable/icon_user_outline"
+            android:title="@string/account" />
+
+        <item android:id="@+id/menu_logout"
+            android:icon="@drawable/icon_log_out_outline"
+            android:title="@string/logout" />
+    </group>
 </menu>

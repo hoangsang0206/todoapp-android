@@ -23,18 +23,24 @@ import android.widget.DatePicker;
 import android.widget.PopupWindow;
 import android.widget.TimePicker;
 
+import com.bumptech.glide.Glide;
 import com.example.todoapp.adapters.SpinnerAdapter;
 import com.example.todoapp.databinding.ActivityMainBinding;
+import com.example.todoapp.databinding.NavigationHeaderBinding;
 import com.example.todoapp.databinding.PopupCreateCategoryBinding;
 import com.example.todoapp.databinding.PopupCreateTodoBinding;
 import com.example.todoapp.fragments.AccountFragment;
 import com.example.todoapp.fragments.CalendarFragment;
+import com.example.todoapp.fragments.CategoriesFragment;
 import com.example.todoapp.fragments.TodoFragment;
 import com.example.todoapp.models.Category;
 import com.example.todoapp.models.Todo;
+import com.example.todoapp.popups.CreateCategoryPopup;
+import com.example.todoapp.popups.CreateTodoPopup;
 import com.example.todoapp.utils.ParseDateTime;
 import com.example.todoapp.utils.RandomString;
 import com.google.android.material.navigation.NavigationBarView;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -61,33 +67,74 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         placeFragment(new TodoFragment());
 
+        binding.bottomNav.setSelectedItemId(R.id.menu_todo);
         binding.bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 int id = item.getItemId();
-
+                setBottomNavCheckable(true);
                 if (id == R.id.menu_nav) {
                     binding.drawerLayout.openDrawer(GravityCompat.START);
-                    return true;
+                    return false;
                 } else if(id == R.id.menu_todo) {
                     placeFragment(new TodoFragment());
+                    return true;
                 } else if(id == R.id.menu_calendar) {
                     placeFragment(new CalendarFragment());
+                    return true;
                 } else if(id == R.id.menu_account) {
-//                    placeFragment(new AccountFragment());
+                    placeFragment(new AccountFragment());
+                    return true;
+                }
+
+                return false;
+            }
+        });
+        binding.navigation.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+
+                if(id == R.id.menu_todo) {
+                    placeFragment(new TodoFragment());
+                    binding.bottomNav.setSelectedItemId(R.id.menu_todo);
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else if(id == R.id.menu_categories) {
+                    placeFragment(new CategoriesFragment());
+                    setBottomNavCheckable(false);
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else if(id == R.id.menu_calendar) {
+                    placeFragment(new CalendarFragment());
+                    binding.bottomNav.setSelectedItemId(R.id.menu_calendar);
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else if(id == R.id.menu_account) {
+                    placeFragment(new AccountFragment());
+                    binding.bottomNav.setSelectedItemId(R.id.menu_account);
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
+                } else if(id == R.id.menu_setting) {
+                    setBottomNavCheckable(false);
+                    //
+                }else if(id == R.id.menu_logout) {
                     logout();
                 }
 
                 return false;
             }
         });
-
         binding.btnAddFloating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCreateTodoPopup();
+                CreateTodoPopup.showPopup(MainActivity.this);
             }
         });
+
+        showUserInfomation();
+    }
+
+    private void setBottomNavCheckable(boolean checkable) {
+        for(int i = 0; i < binding.bottomNav.getMenu().size(); i++) {
+            binding.bottomNav.getMenu().getItem(i).setCheckable(checkable);
+        }
     }
 
     private void placeFragment(Fragment fragment) {
@@ -97,186 +144,17 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private void showCreateTodoPopup() {
-        PopupCreateTodoBinding createTodoBinding = PopupCreateTodoBinding.inflate(getLayoutInflater());
-        PopupWindow popupWindow = new PopupWindow(createTodoBinding.getRoot(),
-                ConstraintLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
-
-        float radius = 1f;
-        View decorView = getWindow().getDecorView();
-        ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
-        Drawable windowBackground = decorView.getBackground();
-        createTodoBinding.blurView.setupWith(rootView, new RenderScriptBlur(createTodoBinding.getRoot().getContext()))
-                        .setFrameClearDrawable(windowBackground)
-                        .setBlurRadius(radius)
-                        .setBlurAutoUpdate(true);
-
-        popupWindow.showAtLocation(binding.getRoot(), Gravity.CENTER, 0, 0);
-        popupWindow.getContentView().startAnimation(AnimationUtils.loadAnimation(binding.getRoot().getContext(), R.anim.fade_in));
-        initCreateTodoPopup(createTodoBinding, popupWindow);
-        getCategories(createTodoBinding);
-    }
-
-    private void initCreateTodoPopup(PopupCreateTodoBinding binding, PopupWindow popup) {
-        binding.blurView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popup.dismiss();
-            }
-        });
-        binding.blurViewContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {}
-        });
-        binding.btnAddCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showCreateCategoryPopup();
-            }
-        });
-
-        final LocalDate[] dateToComplete = new LocalDate[1];
-        final LocalDateTime[] dateTimeToComplete = new LocalDateTime[1];
-
-        DatePickerDialog d_dialog = new DatePickerDialog(MainActivity.this, new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                dateToComplete[0] = LocalDate.of(year, month + 1, dayOfMonth);
-            }
-        }, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
-        TimePickerDialog t_dialog = new TimePickerDialog(MainActivity.this, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                if(dateToComplete[0] != null) {
-                    dateTimeToComplete[0] = LocalDateTime.of(dateToComplete[0].getYear(),
-                            dateToComplete[0].getMonthValue(), dateToComplete[0].getDayOfMonth(), hourOfDay, minute);
-                } else {
-                    dateTimeToComplete[0] = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
-                            LocalDateTime.now().getDayOfMonth(), hourOfDay, minute);
-                }
-            }
-        }, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), true);
-
-        binding.btnSetDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                d_dialog.show();
-            }
-        });
-        binding.btnSetTime.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                t_dialog.show();
-            }
-        });
-        binding.btnCreateTodo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = binding.txtTodo.getText().toString();
-                if(name == null || name.isEmpty()) {
-                    binding.txtTodo.setError("Nhập tên công việc");
-                } else {
-                    Category category = (Category) binding.categorySpinner.getSelectedItem();
-                    createTodo(name, category, dateTimeToComplete[0]);
-                    popup.dismiss();
-                }
-            }
-        });
-    }
-
-    private void showCreateCategoryPopup() {
-        PopupCreateCategoryBinding createCategoryBinding = PopupCreateCategoryBinding.inflate(getLayoutInflater());
-        PopupWindow popupWindow = new PopupWindow(createCategoryBinding.getRoot(),
-                ConstraintLayout.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
-
-        float radius = 1f;
-        View decorView = getWindow().getDecorView();
-        ViewGroup rootView = (ViewGroup) decorView.findViewById(android.R.id.content);
-        Drawable windowBackground = decorView.getBackground();
-        createCategoryBinding.blurView.setupWith(rootView, new RenderScriptBlur(createCategoryBinding.getRoot().getContext()))
-                .setFrameClearDrawable(windowBackground)
-                .setBlurRadius(radius)
-                .setBlurAutoUpdate(true);
-
-        popupWindow.getContentView().startAnimation(AnimationUtils.loadAnimation(binding.getRoot().getContext(), R.anim.fade_in));
-        popupWindow.showAtLocation(binding.getRoot(), Gravity.CENTER, 0, 0);
-
-        initCreateCategoryPopup(createCategoryBinding, popupWindow);
-    }
-
-    private void initCreateCategoryPopup(PopupCreateCategoryBinding binding, PopupWindow popup) {
-        binding.blurView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popup.dismiss();
-            }
-        });
-        binding.blurViewContent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {}
-        });
-        binding.btnCreateCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String name = binding.categoryName.getText().toString();
-                if(name == null || name.isEmpty()) {
-                    binding.categoryName.setError("Nhập tên danh mục");
-                } else {
-                    createCategory(name);
-                    binding.categoryName.setText("");
-                    popup.dismiss();
-                }
-            }
-        });
-        binding.btnCancelCreateCategory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                binding.categoryName.setText("");
-                popup.dismiss();
-            }
-        });
-    }
-
-    private void createCategory(String cateName) {
-        String cateId = "c_" + RandomString.random(10);
-        Category category = new Category(cateId, cateName);
-
+    private void showUserInfomation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/categories/" + cateId);
-        ref.setValue(category);
-    }
+        if(user == null) {
+            return;
+        }
 
-    private void getCategories(PopupCreateTodoBinding binding) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/categories");
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                ArrayList<Category> categories = new ArrayList<>();
-                if(snapshot.exists()) {
-                    for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        Category category = dataSnapshot.getValue(Category.class);
-                        categories.add(category);
-                    }
-                }
-
-                binding.categorySpinner.setAdapter(null);
-                binding.categorySpinner.setAdapter(new SpinnerAdapter(MainActivity.this,
-                        androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, categories));
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) { }
-        });
-    }
-
-    private void createTodo(String name, Category category, LocalDateTime dateToComplete) {
-        String id = "td_" + RandomString.random(10);
-        Todo todo = new Todo(id, name, null, ParseDateTime.toString(dateToComplete, "dd/MM/yyyy HH:mm:a"), false, category);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/todoList/" + id);
-        ref.setValue(todo);
+        View headerView = binding.navigation.getHeaderView(0);
+        NavigationHeaderBinding navHeaderBinding = NavigationHeaderBinding.bind(headerView);
+        navHeaderBinding.tvUserFullname.setText(user.getDisplayName() != null && !user.getDisplayName().isEmpty() ? user.getDisplayName() : "-------");
+        navHeaderBinding.tvEmail.setText(user.getEmail());
+        Glide.with(navHeaderBinding.getRoot().getContext()).load(user.getPhotoUrl()).error(R.drawable.user_no_image).into(navHeaderBinding.userImage);
     }
 
     private void logout() {

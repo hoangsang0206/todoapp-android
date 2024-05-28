@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerViewAdapter.TodoViewHolder> {
@@ -86,8 +87,11 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/todoList/" + todo.getId() + "/completeStatus");
-                ref.setValue(isChecked);
+                FirebaseDatabase db = FirebaseDatabase.getInstance();
+                DatabaseReference ref_status = db.getReference("users/" + user.getUid() + "/todoList/" + todo.getId() + "/completeStatus");
+                DatabaseReference ref_date = db.getReference("users/" + user.getUid() + "/todoList/" + todo.getId() + "/dateCompleted");
+                ref_status.setValue(isChecked);
+                ref_date.setValue(isChecked ? ParseDateTime.toString(LocalDateTime.now()) : null);
             }
         });
     }
