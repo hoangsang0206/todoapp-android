@@ -28,7 +28,7 @@ import java.util.Comparator;
 
 public class HorizonCategoryRecyclerViewAdapter extends RecyclerView.Adapter<HorizonCategoryRecyclerViewAdapter.CViewHolder> {
     private ArrayList<Category> categories;
-    private int clickedItem = RecyclerView.NO_POSITION;
+    private int clickedItem = 0;
     private FragmentTodoBinding fragmentTodoBinding;
 
     public HorizonCategoryRecyclerViewAdapter(FragmentTodoBinding fragmentTodoBinding, ArrayList<Category> categories) {

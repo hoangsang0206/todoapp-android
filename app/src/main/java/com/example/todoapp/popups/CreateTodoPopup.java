@@ -35,6 +35,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 
 import eightbitlab.com.blurview.RenderScriptBlur;
@@ -80,23 +81,21 @@ public class CreateTodoPopup {
 
         final LocalDate[] dateToComplete = new LocalDate[1];
         final LocalDateTime[] dateTimeToComplete = new LocalDateTime[1];
+        dateToComplete[0] = LocalDate.now();
 
         DatePickerDialog d_dialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 dateToComplete[0] = LocalDate.of(year, month + 1, dayOfMonth);
+                dateTimeToComplete[0] = LocalDateTime.of(dateToComplete[0].getYear(),
+                        dateToComplete[0].getMonthValue(), dateToComplete[0].getDayOfMonth(), LocalTime.now().getHour(), LocalTime.now().getMinute());
             }
         }, LocalDate.now().getYear(), LocalDate.now().getMonthValue() - 1, LocalDate.now().getDayOfMonth());
         TimePickerDialog t_dialog = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                if(dateToComplete[0] != null) {
-                    dateTimeToComplete[0] = LocalDateTime.of(dateToComplete[0].getYear(),
-                            dateToComplete[0].getMonthValue(), dateToComplete[0].getDayOfMonth(), hourOfDay, minute);
-                } else {
-                    dateTimeToComplete[0] = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonthValue(),
-                            LocalDateTime.now().getDayOfMonth(), hourOfDay, minute);
-                }
+                dateTimeToComplete[0] = LocalDateTime.of(dateToComplete[0].getYear(),
+                        dateToComplete[0].getMonthValue(), dateToComplete[0].getDayOfMonth(), hourOfDay, minute);
             }
         }, LocalDateTime.now().getHour(), LocalDateTime.now().getMinute(), true);
 
@@ -120,7 +119,8 @@ public class CreateTodoPopup {
                     binding.txtTodo.setError("Nhập tên công việc");
                 } else {
                     Category category = (Category) binding.categorySpinner.getSelectedItem();
-                    createTodo(name, category.getId(), dateTimeToComplete[0]);
+                    String id = category.getId();
+                    createTodo(name, !id.equals("none") ? id : null, dateTimeToComplete[0]);
                     popup.dismiss();
                 }
             }
@@ -129,7 +129,9 @@ public class CreateTodoPopup {
 
     private static void createTodo(String name, String categoryId, LocalDateTime dateToComplete) {
         String id = "td_" + RandomString.random(10);
-        Todo todo = new Todo(id, name, null, ParseDateTime.toString(dateToComplete, "dd/MM/yyyy HH:mm a"), null, false, categoryId);
+        String dateToCompleteStr = ParseDateTime.toString(dateToComplete, "dd/MM/yyyy HH:mm a");
+        Todo todo = new Todo(id, name, null, dateToCompleteStr, false, categoryId);
+        todo.setTimeToNotify(dateToCompleteStr);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/todoList/" + id);
@@ -143,6 +145,7 @@ public class CreateTodoPopup {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 ArrayList<Category> categories = new ArrayList<>();
+                categories.add(new Category("none", "Không có danh mục"));
                 if(snapshot.exists()) {
                     for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                         Category category = dataSnapshot.getValue(Category.class);

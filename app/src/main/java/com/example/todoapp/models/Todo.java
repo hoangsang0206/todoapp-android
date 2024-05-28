@@ -9,12 +9,22 @@ public class Todo implements Serializable {
     protected String dateToComplete;
     protected String dateCompleted;
     protected boolean completeStatus;
+    protected String timeToNotify;
     protected String categoryId;
 
     public Todo() {
     }
 
-    public Todo(String id, String title, String description, String dateToComplete, String dateCompleted, boolean completeStatus, String categoryId) {
+    public Todo(String id, String title, String description, String dateToComplete, boolean completeStatus, String categoryId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.dateToComplete = dateToComplete;
+        this.completeStatus = completeStatus;
+        this.categoryId = categoryId;
+    }
+
+    public Todo(String id, String title, String description, String dateToComplete, String dateCompleted, boolean completeStatus, String categoryId, String timeToNotify) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -22,6 +32,7 @@ public class Todo implements Serializable {
         this.dateCompleted = dateCompleted;
         this.completeStatus = completeStatus;
         this.categoryId = categoryId;
+        this.timeToNotify = timeToNotify;
     }
 
     public String getId() {
@@ -78,5 +89,13 @@ public class Todo implements Serializable {
 
     public void setCategoryId(String categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getTimeToNotify() {
+        return timeToNotify;
+    }
+
+    public void setTimeToNotify(String timeToNotify) {
+        this.timeToNotify = timeToNotify;
     }
 }

@@ -10,8 +10,8 @@
         android:gravity="center_vertical"
         android:text="@string/app_name"
         android:textSize="14sp"
-        android:background="@drawable/spinner_bg"
         android:maxLines="1"
-        android:ellipsize="end"/>
+        android:ellipsize="end"
+        android:layout_marginEnd="10dp"/>
 
 </LinearLayout>

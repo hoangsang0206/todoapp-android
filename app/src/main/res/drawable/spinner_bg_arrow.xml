@@ -8,6 +8,7 @@
                     <corners android:radius="7dp" />
                 </shape>
             </item>
+            <item android:drawable="@drawable/icon_baseline_arrow_drop_down_24" android:gravity="center|end" />
         </layer-list>
     </item>
 </selector>

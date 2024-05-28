@@ -76,11 +76,13 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         holder.binding.btnEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, UpdateTodoActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("Todo", todo);
-                intent.putExtras(bundle);
-                context.startActivity(intent);
+                onClickChangeActivity(todo);
+            }
+        });
+        holder.binding.tvTodo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickChangeActivity(todo);
             }
         });
         holder.binding.ckboxComplete.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -94,6 +96,14 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
                 ref_date.setValue(isChecked ? ParseDateTime.toString(LocalDateTime.now()) : null);
             }
         });
+    }
+
+    private void onClickChangeActivity(Todo todo) {
+        Intent intent = new Intent(context, UpdateTodoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("Todo", todo);
+        intent.putExtras(bundle);
+        context.startActivity(intent);
     }
 
     @Override

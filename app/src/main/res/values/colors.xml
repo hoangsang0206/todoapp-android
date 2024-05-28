@@ -3,8 +3,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="red">#e30019</color>
+    <color name="gray">#898989</color>
     <color name="lightBlue">#A0DEFF</color>
     <color name="lightBlue_1">#5AB2FF</color>
+    <color name="lightBlue_2">#CAF4FF</color>
     <color name="categoryBtn">#e0eefd</color>
     <color name="categoryBtnActive">#7dabf5</color>
     <color name="overlayColor">#80000000</color>

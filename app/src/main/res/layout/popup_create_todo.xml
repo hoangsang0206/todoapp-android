@@ -55,7 +55,8 @@
                     android:background="@drawable/spinner_bg"
                     android:layout_marginTop="5dp"
                     android:paddingHorizontal="15dp"
-                    android:paddingVertical="0dp" />
+                    android:paddingVertical="0dp"
+                    android:popupBackground="@drawable/bg_list_item"/>
 
                 <ImageButton
                     android:id="@+id/btn_add_category"
