@@ -63,7 +63,7 @@ public class HorizonCategoryRecyclerViewAdapter extends RecyclerView.Adapter<Hor
                 clickedItem = holder.getAdapterPosition();
                 notifyItemChanged(clickedItem);
 
-                fragmentTodoBinding.todoRecyclerView.setVisibility(View.INVISIBLE);
+                fragmentTodoBinding.todayRcv.setVisibility(View.INVISIBLE);
                 fragmentTodoBinding.todoShimmer.setVisibility(View.VISIBLE);
                 fragmentTodoBinding.todoEmpty.setVisibility(View.GONE);
                 fragmentTodoBinding.todoShimmer.startShimmer();
@@ -90,7 +90,7 @@ public class HorizonCategoryRecyclerViewAdapter extends RecyclerView.Adapter<Hor
                             return dateTime != null ? dateTime : LocalDateTime.MAX;
                         }));
 
-                        fragmentTodoBinding.todoRecyclerView.setAdapter(new TodoRecyclerViewAdapter(fragmentTodoBinding.getRoot().getContext(), todoList));
+                        fragmentTodoBinding.todayRcv.setAdapter(new TodoRecyclerViewAdapter(fragmentTodoBinding.getRoot().getContext(), todoList));
 
                         new Handler().postDelayed(new Runnable() {
                             @Override
@@ -99,10 +99,10 @@ public class HorizonCategoryRecyclerViewAdapter extends RecyclerView.Adapter<Hor
                                 fragmentTodoBinding.todoShimmer.stopShimmer();
 
                                 if(todoList.size() == 0) {
-                                    fragmentTodoBinding.todoRecyclerView.setVisibility(View.INVISIBLE);
+                                    fragmentTodoBinding.todayRcv.setVisibility(View.INVISIBLE);
                                     fragmentTodoBinding.todoEmpty.setVisibility(View.VISIBLE);
                                 } else {
-                                    fragmentTodoBinding.todoRecyclerView.setVisibility(View.VISIBLE);
+                                    fragmentTodoBinding.todayRcv.setVisibility(View.VISIBLE);
                                     fragmentTodoBinding.todoEmpty.setVisibility(View.GONE);
                                 }
                             }

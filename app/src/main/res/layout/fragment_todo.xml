@@ -63,16 +63,96 @@
                 android:textSize="16sp"/>
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/todo_recycler_view"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintTop_toBottomOf="@+id/horizon_category_rcview"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="20dp"
-            android:paddingHorizontal="15dp">
+            android:paddingTop="20dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="15dp">
+                <LinearLayout
+                    android:id="@+id/today_todo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Hôm nay"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/today_rcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/today_completed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="15dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Đã hoàn thành hôm nay"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/today_completed_rcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/future_todo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="15dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Tương lai"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"/>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/future_rcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/previous_todo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="15dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:text="Trước đó"
+                        android:textSize="18dp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="10dp"/>
 
-        </androidx.recyclerview.widget.RecyclerView>
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/previous_rcv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
