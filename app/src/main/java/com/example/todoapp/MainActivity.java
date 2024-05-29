@@ -3,14 +3,22 @@ package com.example.todoapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -35,6 +43,7 @@ import com.example.todoapp.fragments.CategoriesFragment;
 import com.example.todoapp.fragments.TodoFragment;
 import com.example.todoapp.models.Category;
 import com.example.todoapp.models.Todo;
+import com.example.todoapp.notification.NotificationReceiver;
 import com.example.todoapp.popups.CreateCategoryPopup;
 import com.example.todoapp.popups.CreateTodoPopup;
 import com.example.todoapp.utils.ParseDateTime;
@@ -55,6 +64,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 
 import eightbitlab.com.blurview.RenderScriptBlur;
@@ -68,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        placeFragment(new TodoFragment());
 
+        createNotificationChannel();
+
+        placeFragment(new TodoFragment());
         binding.bottomNav.setSelectedItemId(R.id.menu_todo);
         binding.bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -178,5 +190,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void createNotificationChannel() {
+        NotificationChannel channel = new NotificationChannel("TodoList", "TodoList", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.setDescription("Channel for TodoList");
+
+        NotificationManager notificationManager = getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
     }
 }

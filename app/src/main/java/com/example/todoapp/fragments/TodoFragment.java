@@ -17,6 +17,7 @@ import com.example.todoapp.adapters.TodoRecyclerViewAdapter;
 import com.example.todoapp.databinding.FragmentTodoBinding;
 import com.example.todoapp.models.Category;
 import com.example.todoapp.models.Todo;
+import com.example.todoapp.notification.Notification;
 import com.example.todoapp.utils.FilterTodoList;
 import com.example.todoapp.utils.ParseDateTime;
 import com.google.firebase.auth.FirebaseAuth;
@@ -131,6 +132,8 @@ public class TodoFragment extends Fragment {
                     LocalDateTime dateTime =  ParseDateTime.fromString(t.getDateToComplete());
                     return dateTime != null ? dateTime : LocalDateTime.MAX;
                 }));
+
+                Notification.setNotification(getContext(), todoList);
 
                 new Handler().postDelayed(new Runnable() {
                     @Override
