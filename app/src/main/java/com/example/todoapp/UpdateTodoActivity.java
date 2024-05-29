@@ -7,9 +7,11 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.opengl.EGLExt;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.DatePicker;
@@ -72,13 +74,15 @@ public class UpdateTodoActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 todo = snapshot.getValue(Todo.class);
-                binding.txtTodo.setText(todo.getTitle());
-                binding.txtDescription.setText(todo.getDescription());
-                binding.changeDate.setText(todo.getDateToComplete() != null ?
-                        ParseDateTime.toString(ParseDateTime.fromString(todo.getDateToComplete()), "dd/MM/yyyy") : "No date");
-                binding.changeTime.setText(todo.getDateToComplete() != null ?
-                        ParseDateTime.toString(ParseDateTime.fromString(todo.getDateToComplete()), "HH:mm a") : "No time");
-                binding.changeTimeNotify.setText(todo.getTimeToNotify() != null ?  ParseDateTime.toString(ParseDateTime.fromString(todo.getTimeToNotify()), "HH:mm a") : "No time");
+                if(todo != null) {
+                    binding.txtTodo.setText(todo.getTitle());
+                    binding.txtDescription.setText(todo.getDescription());
+                    binding.changeDate.setText(todo.getDateToComplete() != null ?
+                            ParseDateTime.toString(ParseDateTime.fromString(todo.getDateToComplete()), "dd/MM/yyyy") : "No date");
+                    binding.changeTime.setText(todo.getDateToComplete() != null ?
+                            ParseDateTime.toString(ParseDateTime.fromString(todo.getDateToComplete()), "HH:mm a") : "No time");
+                    binding.changeTimeNotify.setText(todo.getTimeToNotify() != null ?  ParseDateTime.toString(ParseDateTime.fromString(todo.getTimeToNotify()), "HH:mm a") : "No time");
+                }
             }
 
             @Override
