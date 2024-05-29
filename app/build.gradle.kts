@@ -52,10 +52,12 @@ dependencies {
     implementation("com.google.firebase:firebase-database")
     implementation("com.google.android.gms:play-services-auth:21.2.0")
 
+    implementation("com.facebook.shimmer:shimmer:0.5.0")
+    implementation("com.facebook.android:facebook-login:12.3.0")
+
     implementation("com.github.bumptech.glide:glide:4.16.0") //Load image from url
     implementation("de.hdodenhof:circleimageview:3.1.0") //Circle image view
     implementation("com.github.Dimezis:BlurView:version-2.0.3")
 
     implementation("com.github.chthai64:SwipeRevealLayout:1.4.0")
-    implementation("com.facebook.shimmer:shimmer:0.5.0")
 }
