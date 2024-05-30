@@ -1,10 +1,12 @@
 package com.example.todoapp.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -15,17 +17,14 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.todoapp.LoginOrRegisterActivity;
-import com.example.todoapp.MainActivity;
 import com.example.todoapp.R;
+import com.example.todoapp.UpdateUserProfileActivity;
 import com.example.todoapp.databinding.FragmentSettingBinding;
-import com.example.todoapp.databinding.NavigationHeaderBinding;
 import com.example.todoapp.notification.Notification;
 import com.example.todoapp.popups.ChangePasswordPopup;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,10 +33,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.PropertyPermission;
-
 
 public class SettingFragment extends Fragment {
+    private static final int UPDATE_USER_REQUEST = 1123;
     FragmentSettingBinding binding;
 
     public SettingFragment() {
@@ -109,7 +107,15 @@ public class SettingFragment extends Fragment {
         binding.editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Activity mainActivity = getActivity();
 
+                if(mainActivity == null) {
+                    Toast.makeText(getContext(), "Đã xảy ra lỗi", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Intent intent = new Intent(mainActivity, UpdateUserProfileActivity.class);
+                startActivityForResult(intent, UPDATE_USER_REQUEST);
             }
         });
         binding.changePassword.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +148,7 @@ public class SettingFragment extends Fragment {
     }
 
     private void logout() {
-        MainActivity mainActivity = (MainActivity) getActivity();
+        Activity mainActivity = getActivity();
         Context context = mainActivity.getApplicationContext();
 
         if(context == null) {
@@ -163,7 +169,6 @@ public class SettingFragment extends Fragment {
                 if(user == null) {
                     Intent intent = new Intent(context, LoginOrRegisterActivity.class);
                     startActivity(intent);
-                    mainActivity.finish();
                 }
             }
         });
