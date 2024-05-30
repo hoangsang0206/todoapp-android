@@ -35,7 +35,6 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class SettingFragment extends Fragment {
-    private static final int UPDATE_USER_REQUEST = 1123;
     FragmentSettingBinding binding;
 
     public SettingFragment() {
@@ -92,14 +91,14 @@ public class SettingFragment extends Fragment {
         });
     }
 
-    private void showUserInfomation() {
+    public void showUserInfomation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             return;
         }
 
         Glide.with(binding.userImg).load(user.getPhotoUrl()).error(R.drawable.user_no_image).into(binding.userImg);
-        binding.userFullname.setText(user.getDisplayName() != null && user.getDisplayName().isEmpty() ? "........" : user.getDisplayName());
+        binding.userFullname.setText(user.getDisplayName() != null ? user.getDisplayName() : "");
         binding.userEmail.setText(user.getEmail());
     }
 
@@ -115,7 +114,7 @@ public class SettingFragment extends Fragment {
                 }
 
                 Intent intent = new Intent(mainActivity, UpdateUserProfileActivity.class);
-                startActivityForResult(intent, UPDATE_USER_REQUEST);
+                startActivity(intent);
             }
         });
         binding.changePassword.setOnClickListener(new View.OnClickListener() {

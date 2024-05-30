@@ -139,7 +139,7 @@ public class ChangePasswordPopup {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         dialog.dismiss();
-                        Toast.makeText(binding.getRoot().getContext(), "Mật khẩu cũ không chính xác", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(binding.getRoot().getContext(), "Đổi mật khẩu thất bại", Toast.LENGTH_SHORT).show();
                     }
                 });
     }

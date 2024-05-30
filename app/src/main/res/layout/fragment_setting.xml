@@ -96,7 +96,7 @@
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:padding="7dp"
-                        android:background="@drawable/bg_settiing_icon"
+                        android:background="@drawable/bg_setting_icon"
                         android:src="@drawable/icon_bx_user_blue"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -142,7 +142,7 @@
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:padding="7dp"
-                        android:background="@drawable/bg_settiing_icon"
+                        android:background="@drawable/bg_setting_icon"
                         android:src="@drawable/icon_bx_lock_alt_blue"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -208,7 +208,7 @@
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:padding="7dp"
-                        android:background="@drawable/bg_settiing_icon"
+                        android:background="@drawable/bg_setting_icon"
                         android:src="@drawable/icon_bx_bell_blue"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -254,7 +254,7 @@
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:padding="7dp"
-                        android:background="@drawable/bg_settiing_icon"
+                        android:background="@drawable/bg_setting_icon"
                         android:src="@drawable/icon_bx_info_circle_blue"/>
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -300,7 +300,7 @@
                         android:layout_width="35dp"
                         android:layout_height="35dp"
                         android:padding="7dp"
-                        android:background="@drawable/bg_settiing_icon_red"
+                        android:background="@drawable/bg_setting_icon_red"
                         android:src="@drawable/icon_bx_log_out_red"/>
                     <LinearLayout
                         android:layout_width="wrap_content"

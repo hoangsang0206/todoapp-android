@@ -19,9 +19,9 @@
             android:icon="@drawable/icon_settings_outline"
             android:title="@string/setting" />
 
-        <item android:id="@+id/menu_account"
-            android:icon="@drawable/icon_user_outline"
-            android:title="@string/account" />
+        <item android:id="@+id/menu_dashboard"
+            android:icon="@drawable/icon_bar_chart_outline"
+            android:title="@string/dashboard" />
 
         <item android:id="@+id/menu_logout"
             android:icon="@drawable/icon_log_out_outline"

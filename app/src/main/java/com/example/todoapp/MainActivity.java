@@ -37,12 +37,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
-    private static final int UPDATE_USER_REQUEST = 1123;
     ActivityMainBinding binding;
+    private static MainActivity instance;
+    SettingFragment settingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        instance = this;
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
@@ -71,7 +73,8 @@ public class MainActivity extends AppCompatActivity {
                     placeFragment(new DasboardFragment());
                     return true;
                 } else if(id == R.id.menu_setting) {
-                    placeFragment(new SettingFragment());
+                    settingFragment = new SettingFragment();
+                    placeFragment(settingFragment);
                     return true;
                 }
 
@@ -95,9 +98,9 @@ public class MainActivity extends AppCompatActivity {
                     placeFragment(new CalendarFragment());
                     binding.bottomNav.setSelectedItemId(R.id.menu_calendar);
                     binding.drawerLayout.closeDrawer(GravityCompat.START);
-                } else if(id == R.id.menu_account) {
+                } else if(id == R.id.menu_dashboard) {
                     placeFragment(new DasboardFragment());
-                    binding.bottomNav.setSelectedItemId(R.id.menu_account);
+                    binding.bottomNav.setSelectedItemId(R.id.menu_dashboard);
                     binding.drawerLayout.closeDrawer(GravityCompat.START);
                 } else if(id == R.id.menu_setting) {
                     placeFragment(new SettingFragment());
@@ -160,9 +163,17 @@ public class MainActivity extends AppCompatActivity {
 
         View headerView = binding.navigation.getHeaderView(0);
         NavigationHeaderBinding navHeaderBinding = NavigationHeaderBinding.bind(headerView);
-        navHeaderBinding.tvUserFullname.setText(user.getDisplayName() != null && !user.getDisplayName().isEmpty() ? user.getDisplayName() : "-------");
+        navHeaderBinding.tvUserFullname.setText(user.getDisplayName() != null ? user.getDisplayName() : "");
         navHeaderBinding.tvEmail.setText(user.getEmail());
         Glide.with(navHeaderBinding.getRoot().getContext()).load(user.getPhotoUrl()).error(R.drawable.user_no_image).into(navHeaderBinding.userImage);
+
+        if(settingFragment != null) {
+            settingFragment.showUserInfomation();
+        }
+    }
+
+    public static MainActivity getInstance() {
+        return instance;
     }
 
     private void logout() {
@@ -182,13 +193,5 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == UPDATE_USER_REQUEST) {
-            showUserInfomation();
-        }
     }
 }

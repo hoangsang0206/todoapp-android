@@ -52,7 +52,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Email"
                     android:inputType="text"
-                    android:drawableLeft="@drawable/icon_bx_user"
+                    android:drawableLeft="@drawable/icon_bx_envelope"
                     android:drawablePadding="15dp"
                     style="@style/EditText"/>
 
