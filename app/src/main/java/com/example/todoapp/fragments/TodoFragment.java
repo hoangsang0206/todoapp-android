@@ -133,7 +133,8 @@ public class TodoFragment extends Fragment {
                     return dateTime != null ? dateTime : LocalDateTime.MAX;
                 }));
 
-                Notification.setNotification(getContext(), todoList);
+                Notification.todoList = todoList;
+                Notification.setNotification();
 
                 new Handler().postDelayed(new Runnable() {
                     @Override

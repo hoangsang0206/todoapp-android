@@ -127,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    createUserCategories();
+                    createUserData();
                     signIn(email, password);
                 } else {
                     Toast.makeText(RegisterActivity.this, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
@@ -173,7 +173,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    createUserCategories();
+                    createUserData();
                     Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -238,7 +238,7 @@ public class RegisterActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                createUserCategories();
+                                createUserData();
                                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -254,7 +254,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         }
     }
-    private void createUserCategories() { //create object user in FirebaseDatabase
+    private void createUserData() { //create object user in FirebaseDatabase
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             return;
@@ -266,11 +266,15 @@ public class RegisterActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.exists()) {
                     String id_1 = "c_" + RandomString.random(10);
+                    Map<String, Boolean> settings = new HashMap<>();
+                    settings.put("notification", true);
+
                     database.getReference("users/" + user.getUid() + "/categories/" + id_1).setValue(new Category(id_1, "Công việc"));
                     String id_2 = "c_" + RandomString.random(10);
                     database.getReference("users/" + user.getUid() + "/categories/" + id_2).setValue(new Category(id_2, "Học tập"));
                     String id_3 = "c_" + RandomString.random(10);
                     database.getReference("users/" + user.getUid() + "/categories/" + id_3).setValue(new Category(id_3, "Giải trí"));
+                    database.getReference("users/" + user.getUid() + "/settings").setValue(settings);
                 }
             }
             @Override

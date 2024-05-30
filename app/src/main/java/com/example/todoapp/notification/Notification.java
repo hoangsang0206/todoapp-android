@@ -1,6 +1,8 @@
 package com.example.todoapp.notification;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,19 +15,37 @@ import com.example.todoapp.utils.ParseDateTime;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 
 public class Notification {
-    public static int size = 0;
-    public static void setNotification(Context context, ArrayList<Todo> todoList) {
-        if(context == null || todoList == null) {
+    private static final String CHANNE_ID = "TodoList";
+    private static int size = 0;
+    public static boolean canNotify = true;
+    public static ArrayList<Todo> todoList;
+    public static Context context;
+
+    public static void createNotificationChannel() {
+        if(context == null || !canNotify) {
+            return;
+        }
+
+        NotificationChannel channel = new NotificationChannel(CHANNE_ID, "TodoList", NotificationManager.IMPORTANCE_DEFAULT);
+        channel.setDescription("Channel for TodoList");
+
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannel(channel);
+    }
+
+    public static void setNotification() {
+        if(context == null || todoList == null || !canNotify) {
             return;
         }
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 
-        cancelAllNotify(context, alarmManager);
+        cancelAllNotify(alarmManager);
         size = 0;
 
         for(int i = 0; i < todoList.size(); i++) {
@@ -33,8 +53,10 @@ public class Notification {
             LocalDateTime timeToNotify = ParseDateTime.fromString(todo.getTimeToNotify());
             if(timeToNotify != null && !todo.isCompleteStatus()
                     && timeToNotify.toLocalDate().isEqual(LocalDate.now()) && timeToNotify.isAfter(LocalDateTime.now())) {
+                String timeToComplete = ParseDateTime.toString(ParseDateTime.fromString(todo.getDateToComplete()), "HH:mm a");
+
                 Intent intent = new Intent(context, NotificationReceiver.class);
-                intent.putExtra("title", "Công việc sắp đến hạn - " + ParseDateTime.toString(timeToNotify, "HH:mm a"));
+                intent.putExtra("title", "Công việc sắp đến hạn - " + (timeToComplete != null ? timeToComplete : ""));
                 intent.putExtra("body", todo.getTitle());
 
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -50,7 +72,7 @@ public class Notification {
         }
     }
 
-    public static void cancelAllNotify(Context context, AlarmManager alarmManager) {
+    public static void cancelAllNotify(AlarmManager alarmManager) {
         for(int i = 0; i < size; i++) {
             Intent intent = new Intent(context, NotificationReceiver.class);
             PendingIntent pendingIntent = PendingIntent.getBroadcast(context, i, intent, PendingIntent.FLAG_IMMUTABLE);
@@ -59,6 +81,15 @@ public class Notification {
                 pendingIntent.cancel();
             }
         }
+    }
+
+    public static void cancelNotification() {
+        AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+        notificationManager.deleteNotificationChannel(CHANNE_ID);
+
+        cancelAllNotify(alarmManager);
+        size = 0;
     }
 
 }

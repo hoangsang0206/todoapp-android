@@ -1,6 +1,7 @@
 package com.example.todoapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
@@ -40,9 +41,11 @@ import com.example.todoapp.databinding.PopupCreateTodoBinding;
 import com.example.todoapp.fragments.AccountFragment;
 import com.example.todoapp.fragments.CalendarFragment;
 import com.example.todoapp.fragments.CategoriesFragment;
+import com.example.todoapp.fragments.SettingFragment;
 import com.example.todoapp.fragments.TodoFragment;
 import com.example.todoapp.models.Category;
 import com.example.todoapp.models.Todo;
+import com.example.todoapp.notification.Notification;
 import com.example.todoapp.notification.NotificationReceiver;
 import com.example.todoapp.popups.CreateCategoryPopup;
 import com.example.todoapp.popups.CreateTodoPopup;
@@ -70,6 +73,7 @@ import java.util.ArrayList;
 import eightbitlab.com.blurview.RenderScriptBlur;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int UPDATE_USER_REQUEST = 1123;
     ActivityMainBinding binding;
 
     @Override
@@ -79,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 
-        createNotificationChannel();
+        Notification.context = MainActivity.this;
+        Notification.canNotify = getNotificationSetting();
+        Notification.createNotificationChannel();
 
         placeFragment(new TodoFragment());
         binding.bottomNav.setSelectedItemId(R.id.menu_todo);
@@ -99,6 +105,9 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 } else if(id == R.id.menu_account) {
                     placeFragment(new AccountFragment());
+                    return true;
+                } else if(id == R.id.menu_setting) {
+                    placeFragment(new SettingFragment());
                     return true;
                 }
 
@@ -127,8 +136,8 @@ public class MainActivity extends AppCompatActivity {
                     binding.bottomNav.setSelectedItemId(R.id.menu_account);
                     binding.drawerLayout.closeDrawer(GravityCompat.START);
                 } else if(id == R.id.menu_setting) {
-                    setBottomNavCheckable(false);
-                    //
+                    placeFragment(new SettingFragment());
+                    binding.drawerLayout.closeDrawer(GravityCompat.START);
                 }else if(id == R.id.menu_logout) {
                     logout();
                 }
@@ -146,6 +155,26 @@ public class MainActivity extends AppCompatActivity {
         showUserInfomation();
     }
 
+    private boolean getNotificationSetting() {
+        final boolean[] result = {true};
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/")
+                .child(user.getUid()).child("settings").child("notification");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()) {
+                    result[0] = snapshot.getValue(Boolean.class);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) { }
+        });
+
+        return result[0];
+    }
+
     private void setBottomNavCheckable(boolean checkable) {
         for(int i = 0; i < binding.bottomNav.getMenu().size(); i++) {
             binding.bottomNav.getMenu().getItem(i).setCheckable(checkable);
@@ -159,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private void showUserInfomation() {
+    public void showUserInfomation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             return;
@@ -192,11 +221,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void createNotificationChannel() {
-        NotificationChannel channel = new NotificationChannel("TodoList", "TodoList", NotificationManager.IMPORTANCE_DEFAULT);
-        channel.setDescription("Channel for TodoList");
-
-        NotificationManager notificationManager = getSystemService(NotificationManager.class);
-        notificationManager.createNotificationChannel(channel);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == UPDATE_USER_REQUEST) {
+            showUserInfomation();
+        }
     }
 }

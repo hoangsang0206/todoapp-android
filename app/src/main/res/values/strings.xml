@@ -24,4 +24,5 @@
     <string name="facebook_app_id">393900483629456</string>
     <string name="fb_login_protocol_scheme">fb393900483629456</string>
     <string name="facebook_client_token">d6554552259be82751bf27e343a81cad</string>
+    <string name="quen_mat_khau">Quên mật khẩu?</string>
 </resources>

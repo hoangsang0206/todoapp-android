@@ -47,13 +47,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int GOOGLE_LOGIN_REQUEST_CODE = 1111;
     private CallbackManager callbackManager;
     LoadingDialog dialog = new LoadingDialog(LoginActivity.this);
     Toolbar toolbar;
-    TextView toRegister;
+    TextView toRegister, forgotPassword;
     EditText txtEmail, txtPassword;
     Button loginBtn;
     ImageView googleLogin, facebookLogin;
@@ -73,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.icon_bx_arrow_back);
 
         toRegister = findViewById(R.id.toRegister);
+        forgotPassword = findViewById(R.id.forgot_password);
         txtEmail = findViewById(R.id.login_email);
         txtPassword = findViewById(R.id.login_password);
         loginBtn = findViewById(R.id.btnLogin);
@@ -103,6 +106,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 facebookAuth();
+            }
+        });
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickForgotPassword();
             }
         });
     }
@@ -165,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()) {
-                    createUserCategories();
+                    createUserData();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -174,6 +183,33 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void onClickForgotPassword() {
+        String email = txtEmail.getText().toString();
+        if(email.length() == 0) {
+            txtEmail.setError("Vui lòng nhập Email");
+            txtEmail.requestFocus();
+            return;
+        }
+        if(!EmailValidation.validateEmail(email)) {
+            txtEmail.setError("Email không hợp lệ");
+            txtEmail.requestFocus();
+            return;
+        }
+        dialog.show();
+        FirebaseAuth.getInstance().sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        dialog.dismiss();
+                        if (task.isSuccessful()) {
+                            Toast.makeText(LoginActivity.this, "Chúng tôi đã gửi email đến tài khoản email của bạn", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(LoginActivity.this, "Đã xảy ra lỗi", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -191,7 +227,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()) {
-                                createUserCategories();
+                                createUserData();
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -210,7 +246,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void createUserCategories() { //create object user in FirebaseDatabase
+    private void createUserData() { //create object user in FirebaseDatabase
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             return;
@@ -222,11 +258,15 @@ public class LoginActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(!snapshot.exists()) {
                     String id_1 = "c_" + RandomString.random(10);
+                    Map<String, Boolean> settings = new HashMap<>();
+                    settings.put("notification", true);
+
                     database.getReference("users/" + user.getUid() + "/categories/" + id_1).setValue(new Category(id_1, "Công việc"));
                     String id_2 = "c_" + RandomString.random(10);
                     database.getReference("users/" + user.getUid() + "/categories/" + id_2).setValue(new Category(id_2, "Học tập"));
                     String id_3 = "c_" + RandomString.random(10);
                     database.getReference("users/" + user.getUid() + "/categories/" + id_3).setValue(new Category(id_3, "Giải trí"));
+                    database.getReference("users/" + user.getUid() + "/settings").setValue(settings);
                 }
             }
             @Override
