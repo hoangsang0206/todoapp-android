@@ -38,12 +38,13 @@ import java.util.Comparator;
 
 public class CalendarFragment extends Fragment {
     FragmentCalendarBinding binding;
+    private LocalDate selectedDate = LocalDate.now();
 
     public CalendarFragment() {
         // Required empty public constructor
     }
 
-    public static CalendarFragment newInstance(String param1, String param2) {
+    public static CalendarFragment newInstance() {
         CalendarFragment fragment = new CalendarFragment();
 
         return fragment;
@@ -72,6 +73,7 @@ public class CalendarFragment extends Fragment {
                if(selected) {
                    LocalDate _date = LocalDate.of(date.getYear(), date.getMonth(), date.getDay());
                    TodoDayDecorator.daySelected = date;
+                   selectedDate = _date;
                    loadTodoList(_date);
                    updateDecorator(date);
                }
@@ -79,6 +81,14 @@ public class CalendarFragment extends Fragment {
         });
 
         return binding.getRoot();
+    }
+
+    public FragmentCalendarBinding getBinding() {
+        return binding;
+    }
+
+    public LocalDate getSelectedDate() {
+        return selectedDate;
     }
 
     private void updateDecorator(CalendarDay day) {
@@ -91,7 +101,7 @@ public class CalendarFragment extends Fragment {
         }
     }
 
-    private void loadTodoList(LocalDate date) {
+    public void loadTodoList(LocalDate date) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             return;
@@ -102,7 +112,7 @@ public class CalendarFragment extends Fragment {
         binding.todoShimmer.startShimmer();
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("users/" + user.getUid() + "/todoList");
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()) {
@@ -111,13 +121,13 @@ public class CalendarFragment extends Fragment {
                         todoList.add(snap.getValue(Todo.class));
                     });
 
-                    ArrayList<Todo> todayTodoList = FilterTodoList.byDate(todoList, date);
-                    todayTodoList.sort(Comparator.comparing(t -> {
+                    ArrayList<Todo> filteredTodoList = FilterTodoList.byDate(todoList, date);
+                    filteredTodoList.sort(Comparator.comparing(t -> {
                         LocalDateTime dateTime =  ParseDateTime.fromString(t.getDateToComplete());
                         return dateTime != null ? dateTime : LocalDateTime.MAX;
                     }));
 
-                    binding.todoRcview.setAdapter(new TodoRecyclerViewAdapter(getContext(), todayTodoList));
+                    binding.todoRcview.setAdapter(new TodoRecyclerViewAdapter(getContext(), filteredTodoList));
                     TodoDayDecorator.todoList = todoList;
                     binding.calendar.addDecorator(new TodoDayDecorator());
                 } else {

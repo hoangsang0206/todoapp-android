@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.todoapp.MainActivity;
 import com.example.todoapp.adapters.HorizonCategoryRecyclerViewAdapter;
 import com.example.todoapp.adapters.ScrollableLinearLayoutManager;
 import com.example.todoapp.adapters.TodoRecyclerViewAdapter;
@@ -28,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -78,6 +80,10 @@ public class TodoFragment extends Fragment {
         return binding.getRoot();
     }
 
+    public FragmentTodoBinding getBinding() {
+        return binding;
+    }
+
     private void getCategories() {
         binding.horizonCategoryRcview.setVisibility(View.INVISIBLE);
         binding.categoriesShimmer.setVisibility(View.VISIBLE);
@@ -119,7 +125,7 @@ public class TodoFragment extends Fragment {
         binding.todoShimmer.startShimmer();
 
         DatabaseReference ref = db.getReference("users/" + user.getUid() + "/todoList");
-        ref.addValueEventListener(new ValueEventListener() {
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 todoList = new ArrayList<>();
