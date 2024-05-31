@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,6 @@ import com.example.todoapp.adapters.TodoRecyclerViewAdapter;
 import com.example.todoapp.databinding.FragmentTodoBinding;
 import com.example.todoapp.models.Category;
 import com.example.todoapp.models.Todo;
-import com.example.todoapp.notification.Notification;
 import com.example.todoapp.utils.FilterTodoList;
 import com.example.todoapp.utils.ParseDateTime;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,9 +37,6 @@ import java.util.Comparator;
 public class TodoFragment extends Fragment {
     private final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private final FirebaseDatabase db = FirebaseDatabase.getInstance();
-
-    private ArrayList<Category> categories;
-    private ArrayList<Todo> todoList;
     private FragmentTodoBinding binding;
 
     public TodoFragment() {
@@ -67,7 +64,7 @@ public class TodoFragment extends Fragment {
         LinearLayoutManager linearLayoutManager_2 = new ScrollableLinearLayoutManager(getContext(), false);
         LinearLayoutManager linearLayoutManager_3 = new ScrollableLinearLayoutManager(getContext(), false);
         LinearLayoutManager linearLayoutManager_4 = new ScrollableLinearLayoutManager(getContext(), false);
-        LinearLayoutManager horizonLinearLayoutManager = new LinearLayoutManager(binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager horizonLinearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
         binding.todayRcv.setLayoutManager(linearLayoutManager_1);
         binding.todayCompletedRcv.setLayoutManager(linearLayoutManager_2);
         binding.futureRcv.setLayoutManager(linearLayoutManager_3);
@@ -92,7 +89,7 @@ public class TodoFragment extends Fragment {
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                categories = new ArrayList<>();
+                ArrayList<Category> categories = new ArrayList<>();
                 categories.add(new Category("all", "Tất cả"));
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Category category = dataSnapshot.getValue(Category.class);
@@ -128,7 +125,7 @@ public class TodoFragment extends Fragment {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                todoList = new ArrayList<>();
+                ArrayList<Todo> todoList = new ArrayList<>();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Todo todo = dataSnapshot.getValue(Todo.class);
                     todoList.add(todo);
@@ -139,54 +136,13 @@ public class TodoFragment extends Fragment {
                     return dateTime != null ? dateTime : LocalDateTime.MAX;
                 }));
 
-                Notification.todoList = todoList;
-                Notification.setNotification();
-
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         binding.todoShimmer.stopShimmer();
                         binding.todoShimmer.setVisibility(View.INVISIBLE);
-
-                        if(todoList.size() == 0) {
-                            binding.todayTodo.setVisibility(View.GONE);
-                            binding.todayCompleted.setVisibility(View.GONE);
-                            binding.futureTodo.setVisibility(View.GONE);
-                            binding.previousTodo.setVisibility(View.GONE);
-                            binding.todoEmpty.setVisibility(View.VISIBLE);
-                        } else {
-                            ArrayList<Todo> today = FilterTodoList.today(todoList);
-                            ArrayList<Todo> todayCompleted = FilterTodoList.todayCompleted(todoList);
-                            ArrayList<Todo> future = FilterTodoList.future(todoList);
-                            ArrayList<Todo> previous = FilterTodoList.previous(todoList);
-
-                            if(today.size() > 0) {
-                                binding.todayTodo.setVisibility(View.VISIBLE);
-                                binding.todayRcv.setAdapter(new TodoRecyclerViewAdapter(getContext(), today));
-                            } else {
-                                binding.todayTodo.setVisibility(View.GONE);
-                            }
-                            if(todayCompleted.size() > 0) {
-                                binding.todayCompleted.setVisibility(View.VISIBLE);
-                                binding.todayCompletedRcv.setAdapter(new TodoRecyclerViewAdapter(getContext(), todayCompleted));
-                            } else {
-                                binding.todayCompleted.setVisibility(View.GONE);
-                            }
-                            if(future.size() > 0) {
-                                binding.futureTodo.setVisibility(View.VISIBLE);
-                                binding.futureRcv.setAdapter(new TodoRecyclerViewAdapter(getContext(), future));
-                            } else {
-                                binding.futureTodo.setVisibility(View.GONE);
-                            }
-                            if(previous.size() > 0) {
-                                binding.previousTodo.setVisibility(View.VISIBLE);
-                                binding.previousRcv.setAdapter(new TodoRecyclerViewAdapter(getContext(), previous));
-                            } else {
-                                binding.previousTodo.setVisibility(View.GONE);
-                            }
-
-                            binding.todoEmpty.setVisibility(View.GONE);
-                        }
+                        showTodoList(todoList);
+                        MainActivity.getInstance().setStarted();
                     }
                 }, 1000);
             }
@@ -194,6 +150,55 @@ public class TodoFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) { }
         });
+    }
+
+    public void showTodoList(ArrayList<Todo> todoList) {
+        if(todoList.size() == 0) {
+            binding.todayTodo.setVisibility(View.GONE);
+            binding.todayCompleted.setVisibility(View.GONE);
+            binding.futureTodo.setVisibility(View.GONE);
+            binding.previousTodo.setVisibility(View.GONE);
+            binding.todoEmpty.setVisibility(View.VISIBLE);
+        } else {
+            ArrayList<Todo> today = FilterTodoList.today(todoList);
+            ArrayList<Todo> todayCompleted = FilterTodoList.todayCompleted(todoList);
+            ArrayList<Todo> future = FilterTodoList.future(todoList);
+            ArrayList<Todo> previous = FilterTodoList.previous(todoList);
+
+            if(today.size() > 0) {
+                binding.todayTodo.setVisibility(View.VISIBLE);
+                binding.todayRcv.setAdapter(new TodoRecyclerViewAdapter(getContext(), today));
+            } else {
+                binding.todayTodo.setVisibility(View.GONE);
+            }
+
+            if(todayCompleted.size() > 0) {
+                todayCompleted.sort(Comparator.comparing(t -> {
+                    LocalDateTime dateTime =  ParseDateTime.fromString(t.getDateCompleted());
+                    return dateTime != null ? dateTime : LocalDateTime.MAX;
+                }));
+                binding.todayCompleted.setVisibility(View.VISIBLE);
+                binding.todayCompletedRcv.setAdapter(new TodoRecyclerViewAdapter(getContext(), todayCompleted));
+            } else {
+                binding.todayCompleted.setVisibility(View.GONE);
+            }
+
+            if(future.size() > 0) {
+                binding.futureTodo.setVisibility(View.VISIBLE);
+                binding.futureRcv.setAdapter(new TodoRecyclerViewAdapter(getContext(), future));
+            } else {
+                binding.futureTodo.setVisibility(View.GONE);
+            }
+
+            if(previous.size() > 0) {
+                binding.previousTodo.setVisibility(View.VISIBLE);
+                binding.previousRcv.setAdapter(new TodoRecyclerViewAdapter(getContext(), previous));
+            } else {
+                binding.previousTodo.setVisibility(View.GONE);
+            }
+
+            binding.todoEmpty.setVisibility(View.GONE);
+        }
     }
 
 }

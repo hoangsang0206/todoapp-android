@@ -151,11 +151,11 @@ public class CreateTodoPopup {
                         Category category = dataSnapshot.getValue(Category.class);
                         categories.add(category);
                     }
-                }
 
-                binding.categorySpinner.setAdapter(null);
-                binding.categorySpinner.setAdapter(new SpinnerAdapter(context,
-                        androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, categories));
+                    binding.categorySpinner.setAdapter(null);
+                    binding.categorySpinner.setAdapter(new SpinnerAdapter(context,
+                            androidx.appcompat.R.layout.support_simple_spinner_dropdown_item, categories));
+                }
             }
 
             @Override

@@ -60,4 +60,5 @@ dependencies {
     implementation("com.github.Dimezis:BlurView:version-2.0.3")
     implementation("com.github.chthai64:SwipeRevealLayout:1.4.0")
     implementation("com.github.prolificinteractive:material-calendarview:2.0.0")
+    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
 }

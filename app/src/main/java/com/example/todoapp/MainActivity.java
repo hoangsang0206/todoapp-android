@@ -1,7 +1,6 @@
 package com.example.todoapp;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.Fragment;
@@ -21,7 +20,7 @@ import com.example.todoapp.databinding.ActivityMainBinding;
 import com.example.todoapp.databinding.FragmentCalendarBinding;
 import com.example.todoapp.databinding.FragmentTodoBinding;
 import com.example.todoapp.databinding.NavigationHeaderBinding;
-import com.example.todoapp.fragments.DasboardFragment;
+import com.example.todoapp.fragments.DashboardFragment;
 import com.example.todoapp.fragments.CalendarFragment;
 import com.example.todoapp.fragments.CategoriesFragment;
 import com.example.todoapp.fragments.SettingFragment;
@@ -55,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
     SettingFragment settingFragment;
     TodoFragment todoFragment;
     CalendarFragment calendarFragment;
+    DashboardFragment dashboardFragment;
+    boolean isStarted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,8 @@ public class MainActivity extends AppCompatActivity {
         Notification.canNotify = getNotificationSetting();
         Notification.createNotificationChannel();
 
-        placeFragment(new TodoFragment());
+        todoFragment = new TodoFragment();
+        placeFragment(todoFragment);
         binding.bottomNav.setSelectedItemId(R.id.menu_todo);
         binding.bottomNav.setOnItemSelectedListener(new NavigationBarView.OnItemSelectedListener() {
             @Override
@@ -87,7 +89,8 @@ public class MainActivity extends AppCompatActivity {
                     placeFragment(calendarFragment);
                     return true;
                 } else if(id == R.id.menu_dashboard) {
-                    placeFragment(new DasboardFragment());
+                    dashboardFragment = new DashboardFragment();
+                    placeFragment(dashboardFragment);
                     return true;
                 } else if(id == R.id.menu_setting) {
                     settingFragment = new SettingFragment();
@@ -116,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     binding.bottomNav.setSelectedItemId(R.id.menu_calendar);
                     binding.drawerLayout.closeDrawer(GravityCompat.START);
                 } else if(id == R.id.menu_dashboard) {
-                    placeFragment(new DasboardFragment());
+                    placeFragment(new DashboardFragment());
                     binding.bottomNav.setSelectedItemId(R.id.menu_dashboard);
                     binding.drawerLayout.closeDrawer(GravityCompat.START);
                 } else if(id == R.id.menu_setting) {
@@ -188,6 +191,10 @@ public class MainActivity extends AppCompatActivity {
         if(settingFragment != null) {
             settingFragment.showUserInfomation();
         }
+
+        if(dashboardFragment != null) {
+            dashboardFragment.showUserInfomation();
+        }
     }
 
     public static MainActivity getInstance() {
@@ -218,13 +225,16 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase db = FirebaseDatabase.getInstance();
         DatabaseReference ref = db.getReference("users/" + user.getUid() + "/todoList");
 
-        showTodoShimmer();
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int completed = 0;
                 ArrayList<Todo> todoList = new ArrayList<>();
                 for(DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     Todo todo = dataSnapshot.getValue(Todo.class);
+                    if(todo.isCompleteStatus()) {
+                        completed++;
+                    }
                     todoList.add(todo);
                 }
 
@@ -238,12 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
                 showTodoFragmentData(todoList);
                 showCalendarFragmentData(todoList);
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        hideTodoShimmer();
-                    }
-                }, 1000);
+                showDashboardData(completed, todoList.size());
             }
 
             @Override
@@ -251,74 +256,16 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void showTodoShimmer() {
-        if(todoFragment == null) {
-            return;
-        }
-
-        FragmentTodoBinding todoBinding = todoFragment.getBinding();
-        todoBinding.todayTodo.setVisibility(View.GONE);
-        todoBinding.todayCompleted.setVisibility(View.GONE);
-        todoBinding.futureTodo.setVisibility(View.GONE);
-        todoBinding.previousTodo.setVisibility(View.GONE);
-        todoBinding.todoShimmer.setVisibility(View.VISIBLE);
-        todoBinding.todoEmpty.setVisibility(View.GONE);
-        todoBinding.todoShimmer.startShimmer();
-    }
-
-    private void hideTodoShimmer() {
-        if(todoFragment == null) {
-            return;
-        }
-        FragmentTodoBinding todoBinding = todoFragment.getBinding();
-        todoBinding.todoShimmer.stopShimmer();
-        todoBinding.todoShimmer.setVisibility(View.INVISIBLE);
+    public void setStarted() {
+        this.isStarted = true;
     }
 
     private void showTodoFragmentData(ArrayList<Todo> todoList) {
         if(todoFragment == null) {
             return;
         }
-        FragmentTodoBinding todoBinding = todoFragment.getBinding();
-
-        if(todoList.size() == 0) {
-            todoBinding.todayTodo.setVisibility(View.GONE);
-            todoBinding.todayCompleted.setVisibility(View.GONE);
-            todoBinding.futureTodo.setVisibility(View.GONE);
-            todoBinding.previousTodo.setVisibility(View.GONE);
-            todoBinding.todoEmpty.setVisibility(View.VISIBLE);
-        } else {
-            ArrayList<Todo> today = FilterTodoList.today(todoList);
-            ArrayList<Todo> todayCompleted = FilterTodoList.todayCompleted(todoList);
-            ArrayList<Todo> future = FilterTodoList.future(todoList);
-            ArrayList<Todo> previous = FilterTodoList.previous(todoList);
-
-            if(today.size() > 0) {
-                todoBinding.todayTodo.setVisibility(View.VISIBLE);
-                todoBinding.todayRcv.setAdapter(new TodoRecyclerViewAdapter(todoBinding.getRoot().getContext(), today));
-            } else {
-                todoBinding.todayTodo.setVisibility(View.GONE);
-            }
-            if(todayCompleted.size() > 0) {
-                todoBinding.todayCompleted.setVisibility(View.VISIBLE);
-                todoBinding.todayCompletedRcv.setAdapter(new TodoRecyclerViewAdapter(todoBinding.getRoot().getContext(), todayCompleted));
-            } else {
-                todoBinding.todayCompleted.setVisibility(View.GONE);
-            }
-            if(future.size() > 0) {
-                todoBinding.futureTodo.setVisibility(View.VISIBLE);
-                todoBinding.futureRcv.setAdapter(new TodoRecyclerViewAdapter(todoBinding.getRoot().getContext(), future));
-            } else {
-                todoBinding.futureTodo.setVisibility(View.GONE);
-            }
-            if(previous.size() > 0) {
-                todoBinding.previousTodo.setVisibility(View.VISIBLE);
-                todoBinding.previousRcv.setAdapter(new TodoRecyclerViewAdapter(todoBinding.getRoot().getContext(), previous));
-            } else {
-                todoBinding.previousTodo.setVisibility(View.GONE);
-            }
-
-            todoBinding.todoEmpty.setVisibility(View.GONE);
+        if(isStarted) {
+            todoFragment.showTodoList(todoList);
         }
     }
 
@@ -341,5 +288,12 @@ public class MainActivity extends AppCompatActivity {
             calendarBinding.calendar.removeDecorator(new TodoDayDecorator());
             calendarBinding.todoRcview.setAdapter(null);
         }
+    }
+
+    private void showDashboardData(int completed, int total) {
+        if(dashboardFragment == null) {
+            return;
+        }
+        dashboardFragment.showOverviewTaskCount(completed, total);
     }
 }

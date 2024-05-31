@@ -114,12 +114,7 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
 
     @Override
     public int getItemCount() {
-        return todoList != null ? todoList.size() : 0;
-    }
-
-    public void setTodoList(ArrayList<Todo> newTodoList) {
-        this.todoList = newTodoList;
-        notifyDataSetChanged();
+        return this.todoList != null ? this.todoList.size() : 0;
     }
 
     public class TodoViewHolder extends RecyclerView.ViewHolder {
