@@ -7,6 +7,14 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class FilterTodoList {
+    public static ArrayList<Todo> byDate(ArrayList<Todo> todoList, LocalDate date) {
+        return (ArrayList<Todo>) todoList.stream()
+                .filter(todo ->  {
+                    LocalDate _date = ParseDateTime.toDate(todo.getDateToComplete());
+                    return _date != null && _date.isEqual(date);
+                }).collect(Collectors.toList());
+    }
+
     public static ArrayList<Todo> today(ArrayList<Todo> todoList) {
         return (ArrayList<Todo>) todoList.stream()
                 .filter(todo ->  {

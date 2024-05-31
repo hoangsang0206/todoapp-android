@@ -2,6 +2,7 @@ package com.example.todoapp.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -56,6 +57,11 @@ public class TodoRecyclerViewAdapter extends RecyclerView.Adapter<TodoRecyclerVi
         viewBinderHelper.bind(holder.binding.swiperRevealLayout, todo.getId());
         holder.binding.tvTodo.setText(todo.getTitle());
         holder.binding.tvTime.setText(todo.getDateToComplete() != null ? todo.getDateToComplete() : "No time");
+
+        LocalDateTime toComplete = ParseDateTime.fromString(todo.getDateToComplete());
+        if(toComplete != null && !todo.isCompleteStatus() && toComplete.isBefore(LocalDateTime.now())) {
+            holder.binding.tvTime.setTextColor(Color.parseColor("#e30019"));
+        }
 
         if(todo.isCompleteStatus()) {
             holder.binding.ckboxComplete.setChecked(true);
