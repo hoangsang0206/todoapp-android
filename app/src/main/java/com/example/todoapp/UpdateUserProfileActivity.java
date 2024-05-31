@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -44,7 +45,7 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.icon_bx_arrow_back);
 
-        showUserInfomation();
+        showUserInformation();
         initUi();
     }
 
@@ -70,14 +71,14 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
         });
     }
 
-    private void showUserInfomation() {
+    private void showUserInformation() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if(user == null) {
             return;
         }
 
         userImageUri = user.getPhotoUrl();
-        Glide.with(binding.getRoot().getContext())
+        Glide.with(UpdateUserProfileActivity.this)
                 .load(user.getPhotoUrl()).error(R.drawable.user_no_image).into(binding.userImage);
         binding.userFullname.setText(user.getDisplayName() != null ? user.getDisplayName() : "");
         binding.userEmail.setText(user.getEmail());
@@ -170,7 +171,7 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), userImageUri);
                     showSelectedImage(bitmap);
                 } catch (IOException ex) {
-
+                    ex.printStackTrace();
                 }
             }
         }

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MenuItem;
@@ -186,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationHeaderBinding navHeaderBinding = NavigationHeaderBinding.bind(headerView);
         navHeaderBinding.tvUserFullname.setText(user.getDisplayName() != null ? user.getDisplayName() : "");
         navHeaderBinding.tvEmail.setText(user.getEmail());
-        Glide.with(navHeaderBinding.getRoot().getContext()).load(user.getPhotoUrl()).error(R.drawable.user_no_image).into(navHeaderBinding.userImage);
+        Glide.with(MainActivity.this).load(user.getPhotoUrl()).error(R.drawable.user_no_image).into(navHeaderBinding.userImage);
 
         if(settingFragment != null) {
             settingFragment.showUserInfomation();
@@ -201,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         return instance;
     }
 
-    private void logout() {
+    public void logout() {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signOut();
 
@@ -215,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 if(user == null) {
                     Intent intent = new Intent(MainActivity.this, LoginOrRegisterActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             }
         });

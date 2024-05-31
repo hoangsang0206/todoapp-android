@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.todoapp.LoginOrRegisterActivity;
+import com.example.todoapp.MainActivity;
 import com.example.todoapp.R;
 import com.example.todoapp.UpdateUserProfileActivity;
 import com.example.todoapp.databinding.FragmentSettingBinding;
@@ -141,34 +142,7 @@ public class SettingFragment extends Fragment {
         binding.logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                logout();
-            }
-        });
-    }
-
-    private void logout() {
-        Activity mainActivity = getActivity();
-        Context context = mainActivity.getApplicationContext();
-
-        if(context == null) {
-            Toast.makeText(getContext(), "Đã xảy ra lỗi", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.signOut();
-
-        GoogleSignInClient gsc = GoogleSignIn.getClient(context, GoogleSignInOptions.DEFAULT_SIGN_IN);
-        gsc.signOut();
-
-        auth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if(user == null) {
-                    Intent intent = new Intent(context, LoginOrRegisterActivity.class);
-                    startActivity(intent);
-                }
+                MainActivity.getInstance().logout();
             }
         });
     }
