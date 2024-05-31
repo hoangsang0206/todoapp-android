@@ -6,124 +6,147 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".fragments.DashboardFragment">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:paddingHorizontal="15dp"
-        android:orientation="vertical">
-
+        android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="30dp">
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/user_img"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:src="@drawable/user_no_image"/>
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="15dp" >
-                <TextView
-                    android:id="@+id/user_fullname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:text="@string/app_name"
-                    android:textStyle="bold"
-                    android:textSize="16sp" />
-                <TextView
-                    android:id="@+id/user_email"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:text="@string/app_name"
-                    android:textSize="13sp"
-                    android:textColor="@color/gray"
-                    android:layout_marginTop="5dp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingHorizontal="15dp"
             android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:text="Tổng quan"
-                android:textStyle="bold"
-                android:textSize="16sp"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginTop="7dp"
-                android:baselineAligned="false">
+                android:gravity="center_vertical"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="30dp">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/user_img"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/user_no_image"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/bg_dashboard_item"
-                    android:layout_marginEnd="10dp">
+                    android:layout_marginStart="15dp" >
                     <TextView
-                        android:id="@+id/completed_count"
+                        android:id="@+id/user_fullname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="23sp"
-                        android:textStyle="bold"/>
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:text="@string/app_name"
+                        android:textStyle="bold"
+                        android:textSize="16sp" />
                     <TextView
+                        android:id="@+id/user_email"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Đã hoàn thành"
-                        android:textSize="13sp"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="100dp"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@drawable/bg_dashboard_item">
-                    <TextView
-                        android:id="@+id/incomplete_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textSize="23sp"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tất cả"
-                        android:textSize="13sp"/>
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:text="@string/app_name"
+                        android:textSize="13sp"
+                        android:textColor="@color/gray"
+                        android:layout_marginTop="5dp"/>
                 </LinearLayout>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:background="@drawable/bg_dashboard_item">
-                <com.github.mikephil.charting.charts.CombinedChart
-                    android:id="@+id/combinedChart"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="Tổng quan"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="270dp" />
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="7dp"
+                    android:baselineAligned="false">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg_dashboard_item"
+                        android:layout_marginEnd="10dp">
+                        <TextView
+                            android:id="@+id/completed_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="23sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Đã hoàn thành"
+                            android:textSize="13sp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@drawable/bg_dashboard_item">
+                        <TextView
+                            android:id="@+id/incomplete_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="23sp"
+                            android:textStyle="bold"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tất cả"
+                            android:textSize="13sp"/>
+                    </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:background="@drawable/bg_dashboard_item">
+                    <com.github.mikephil.charting.charts.CombinedChart
+                        android:id="@+id/combinedChart"
+                        android:layout_width="match_parent"
+                        android:layout_height="270dp" />
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:text="Tất cả việc trong tuần"
+                    android:textStyle="bold"
+                    android:textSize="16sp"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/week_rcview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>

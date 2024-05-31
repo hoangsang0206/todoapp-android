@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.example.todoapp.R;
+import com.example.todoapp.adapters.TodoRecyclerViewAdapter;
 import com.example.todoapp.databinding.FragmentDashboardBinding;
 import com.example.todoapp.models.Todo;
 import com.example.todoapp.utils.FilterTodoList;
@@ -67,6 +69,10 @@ public class DashboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDashboardBinding.inflate(inflater, container, false);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL ,false);
+        binding.weekRcview.setLayoutManager(linearLayoutManager);
+
         showUserInfomation();
         getData();
         return binding.getRoot();
@@ -94,6 +100,7 @@ public class DashboardFragment extends Fragment {
                         }
 
                         ArrayList<Todo> weekTodoList = FilterTodoList.week(todoList);
+                        loadWeekTodoList(todoList);
                         showOverviewTaskCount(completed, todoList.size());
                         showChart(weekTodoList);
                     }
@@ -112,6 +119,10 @@ public class DashboardFragment extends Fragment {
         Glide.with(binding.userImg).load(user.getPhotoUrl()).error(R.drawable.user_no_image).into(binding.userImg);
         binding.userFullname.setText(user.getDisplayName() != null ? user.getDisplayName() : "");
         binding.userEmail.setText(user.getEmail());
+    }
+
+    public void loadWeekTodoList(ArrayList<Todo> weekTodoList) {
+        binding.weekRcview.setAdapter(new TodoRecyclerViewAdapter(getContext(), weekTodoList));
     }
 
     public void showOverviewTaskCount(int completed, int total) {

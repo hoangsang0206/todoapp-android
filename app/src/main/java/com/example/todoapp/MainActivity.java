@@ -248,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
                 showTodoFragmentData(todoList);
                 showCalendarFragmentData(todoList);
-                showDashboardData(completed, todoList.size());
+                showDashboardData(completed, todoList);
             }
 
             @Override
@@ -290,10 +290,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showDashboardData(int completed, int total) {
+    private void showDashboardData(int completed, ArrayList<Todo> todoList) {
         if(dashboardFragment == null) {
             return;
         }
-        dashboardFragment.showOverviewTaskCount(completed, total);
+        dashboardFragment.showOverviewTaskCount(completed, todoList.size());
+        dashboardFragment.loadWeekTodoList(FilterTodoList.week(todoList));
     }
 }
