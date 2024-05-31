@@ -21,11 +21,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TodoApp"
         tools:targetApi="31">
-        <activity
-            android:name=".UpdateUserProfileActivity"
-            android:exported="false"
-            android:label="Tài khoản"
-            android:parentActivityName=".MainActivity"/>
 
         <receiver android:name=".notification.NotificationReceiver" />
 
@@ -52,6 +47,12 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".UpdateUserProfileActivity"
+            android:exported="false"
+            android:label="Tài khoản"
+            android:parentActivityName=".MainActivity"/>
+
         <activity
             android:name=".UpdateTodoActivity"
             android:exported="false"

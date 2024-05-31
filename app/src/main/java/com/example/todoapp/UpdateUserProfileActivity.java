@@ -25,12 +25,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
 public class UpdateUserProfileActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_CODE = 1122;
-    private static final int GALLERY_REQUEST_CODE = 1122;
+    private static final int GALLERY_REQUEST_CODE = 1132;
     ActivityUpdateUserProfileBinding binding;
     Uri userImageUri;
 
@@ -66,7 +69,7 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
                     return;
                 }
 
-                updateUserProfile(fullname);
+                onClickUpdateUserProfile(fullname);
             }
         });
     }
@@ -78,31 +81,25 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
         }
 
         userImageUri = user.getPhotoUrl();
+        Log.i("User Image", userImageUri.toString());
         Glide.with(UpdateUserProfileActivity.this)
                 .load(user.getPhotoUrl()).error(R.drawable.user_no_image).into(binding.userImage);
         binding.userFullname.setText(user.getDisplayName() != null ? user.getDisplayName() : "");
         binding.userEmail.setText(user.getEmail());
     }
 
-    private void updateUserProfile(String fullname) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if(user == null) {
-            return;
-        }
-
-        LoadingDialog dialog = new LoadingDialog(UpdateUserProfileActivity.this);
+    private void updateUserProfile(String fullname, Uri uri, FirebaseUser user, LoadingDialog dialog) {
         UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
                 .setDisplayName(fullname)
-                .setPhotoUri(userImageUri)
+                .setPhotoUri(uri)
                 .build();
 
-        dialog.show();
         user.updateProfile(profileChangeRequest)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        dialog.dismiss();
                         if(task.isSuccessful()) {
-                            dialog.dismiss();
                             Toast.makeText(UpdateUserProfileActivity.this,
                                     "Cập nhật thành công", Toast.LENGTH_SHORT).show();
                             MainActivity.getInstance().showUserInfomation();
@@ -112,10 +109,39 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        dialog.dismiss();
                         Toast.makeText(UpdateUserProfileActivity.this,
                                 "Không thể thay đổi thông tin", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void onClickUpdateUserProfile(String fullname) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if(user == null) {
+            return;
+        }
+
+        LoadingDialog dialog = new LoadingDialog(UpdateUserProfileActivity.this);
+        dialog.show();
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference ref = storage.getReference("user-images")
+                .child(user.getUid() + ".jpg");
+        ref.putFile(userImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                if(task.isSuccessful()) {
+                    ref.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if(task.isSuccessful()) {
+                                updateUserProfile(fullname, task.getResult(), user, dialog);
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
     private void requestPermission() {
@@ -141,6 +167,8 @@ public class UpdateUserProfileActivity extends AppCompatActivity {
             binding.userImage.setImageBitmap(bitmap);
         }
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
