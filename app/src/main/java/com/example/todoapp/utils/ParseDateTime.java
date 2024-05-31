@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class ParseDateTime {
     public static String toString(LocalDateTime localDateTime, String pattern) {
@@ -13,7 +14,7 @@ public class ParseDateTime {
             return null;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, Locale.US);
         return formatter.format(localDateTime);
     }
 
@@ -22,7 +23,7 @@ public class ParseDateTime {
             return null;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.US);
         return formatter.format(localDate);
     }
 
@@ -31,7 +32,7 @@ public class ParseDateTime {
             return null;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm a", Locale.US);
         return formatter.format(localTime);
     }
 
@@ -40,7 +41,7 @@ public class ParseDateTime {
             return null;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a", Locale.US);
         return formatter.format(localDateTime);
     }
 
@@ -49,7 +50,7 @@ public class ParseDateTime {
             return null;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a", Locale.US);
         return LocalDate.parse(dateTime, formatter);
     }
 
@@ -58,7 +59,7 @@ public class ParseDateTime {
             return null;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a", Locale.US);
         return LocalTime.parse(dateTime, formatter);
     }
 
@@ -67,7 +68,7 @@ public class ParseDateTime {
             return null;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern, Locale.US);
         return LocalTime.parse(dateTime, formatter);
     }
 
@@ -76,7 +77,7 @@ public class ParseDateTime {
             return null;
         }
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm a", Locale.US);
         return LocalDateTime.parse(dateStr, formatter);
     }
 }
